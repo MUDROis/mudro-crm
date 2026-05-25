@@ -13,7 +13,7 @@ app.use(express.json());
 // Подключение к PostgreSQL
 const pool = new Pool({
   // Используем переменные окружения, которые задаст Docker
-  connectionString: process.env.DATABASE_URL,
+  connectionString: process.env.DATABASE_URL || 'postgresql://mudro_admin:mudro2024secure@localhost:5432/mudro_crm',
   ssl: false
 });
 
