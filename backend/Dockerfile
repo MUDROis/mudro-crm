@@ -1,5 +1,8 @@
 FROM node:18-alpine
 
+# Устанавливаем wget для healthcheck
+RUN apk add --no-cache wget
+
 WORKDIR /app
 
 # Копируем файлы зависимостей

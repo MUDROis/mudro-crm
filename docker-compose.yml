@@ -31,6 +31,7 @@ services:
       DATABASE_URL: postgresql://mudro_admin:${DB_PASSWORD:-mudro2024secure}@db:5432/mudro_crm
       JWT_SECRET: ${JWT_SECRET:-your-secret-key-change-in-production}
       NODE_ENV: production
+      PORT: 3000
     ports:
       - "3000:3000"
     depends_on:
@@ -42,6 +43,12 @@ services:
     volumes:
       - ./backend:/app
       - /app/node_modules
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000/api/students"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   # Frontend (Nginx)
   frontend:
@@ -53,10 +60,16 @@ services:
       - ./frontend:/usr/share/nginx/html
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     networks:
       - mudro-network
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:80/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
 networks:
   mudro-network:
