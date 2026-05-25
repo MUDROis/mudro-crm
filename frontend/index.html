@@ -5,50 +5,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Интерактивная школа МУДРО | CRM</title>
     <style>
+        /* === БРЕНДИНГ И ЦВЕТА МУДРО === */
         :root {
-            --primary: #2C5A8D;
-            --primary-hover: #1E4A7A;
-            --primary-light: #E8F0F8;
-            --bg: #F0F4F8;
-            --bg2: #FFFFFF;
-            --bg3: #E6EEF7;
-            --border: #D1DCE8;
-            --text: #1E3A5F;
-            --text2: #4A5F7A;
-            --text3: #7A8FA8;
+            /* Основные цвета (Синяя гамма) */
+            --primary: #2C5A8D;       /* Глубокий синий */
+            --primary-hover: #1E4A7A; /* Темно-синий для наведения */
+            --primary-light: #E8F0F8; /* Светло-голубой фон */
+            
+            /* Фоны и границы */
+            --bg: #F0F4F8;            /* Общий фон (серо-голубой) */
+            --bg2: #FFFFFF;           /* Белый для карточек */
+            --bg3: #E6EEF7;           /* Светлый для выделений */
+            --border: #D1DCE8;        /* Границы */
+            
+            /* Текст */
+            --text: #1E3A5F;          /* Темный текст */
+            --text2: #4A5F7A;         /* Вторичный текст */
+            --text3: #7A8FA8;         /* Серый текст */
+            
+            /* Статусы */
             --green: #2D7A4F;
             --green-light: #E8F5E9;
             --red: #C62828;
             --red-light: #FFEBEE;
             --yellow: #C9A227;
             --yellow-light: #FFF9E6;
-            --shadow: 0 2px 8px rgba(30,58,95,0.08);
-            --shadow-md: 0 4px 16px rgba(30,58,95,0.12);
+            
+            /* Размеры */
+            --sidebar-width: 260px;
             --radius: 12px;
             --radius-sm: 8px;
-            --sidebar-width: 260px;
+            --shadow: 0 2px 8px rgba(30,58,95,0.08);
+            --shadow-md: 0 4px 16px rgba(30,58,95,0.12);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: var(--bg);
             color: var(--text);
             line-height: 1.5;
-            overflow: hidden;
+            overflow: hidden; /* Чтобы скроллился только контент */
         }
 
-        #app {
-            display: flex;
-            height: 100vh;
-        }
+        #app { display: flex; height: 100vh; }
 
-        /* Sidebar */
+        /* === БОКОВОЕ МЕНЮ (SIDEBAR) === */
         .sidebar {
             width: var(--sidebar-width);
             background: var(--bg2);
@@ -64,1975 +67,1015 @@
             background: linear-gradient(135deg, var(--primary-light) 0%, var(--bg2) 100%);
         }
 
-        .sidebar-logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+        .sidebar-logo { display: flex; align-items: center; gap: 12px; }
 
         .sidebar-logo-icon {
-            width: 40px;
-            height: 40px;
+            width: 40px; height: 40px;
             background: linear-gradient(135deg, var(--primary), #4A7BA7);
             border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 20px;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 20px;
         }
 
-        .sidebar-title {
-            font-weight: 800;
-            font-size: 15px;
-            line-height: 1.3;
-        }
+        .sidebar-title { font-weight: 800; font-size: 15px; line-height: 1.3; }
+        .sidebar-subtitle { font-size: 12px; color: var(--text3); margin-top: 4px; }
 
-        .sidebar-subtitle {
-            font-size: 12px;
-            color: var(--text3);
-            margin-top: 4px;
-        }
-
-        .sidebar-nav {
-            flex: 1;
-            padding: 16px 12px;
-            overflow-y: auto;
-        }
+        .sidebar-nav { flex: 1; padding: 16px 12px; overflow-y: auto; }
 
         .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
-            border-radius: var(--radius-sm);
-            color: var(--text2);
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            background: none;
-            width: 100%;
-            text-align: left;
-            margin-bottom: 4px;
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px 16px; border-radius: var(--radius-sm);
+            color: var(--text2); font-size: 14px; font-weight: 600;
+            cursor: pointer; border: none; background: none;
+            width: 100%; text-align: left; margin-bottom: 4px;
             transition: all 0.15s ease;
         }
 
-        .nav-item:hover {
-            background: var(--bg3);
-            color: var(--text);
-        }
-
+        .nav-item:hover { background: var(--bg3); color: var(--text); }
         .nav-item.active {
             background: linear-gradient(135deg, var(--primary-light), var(--bg2));
             color: var(--primary);
             box-shadow: 0 2px 8px rgba(44,90,141,0.15);
         }
+        .nav-item svg { width: 20px; height: 20px; flex-shrink: 0; }
 
-        .nav-item svg {
-            width: 20px;
-            height: 20px;
-            flex-shrink: 0;
-        }
-
-        .sidebar-footer {
-            padding: 12px;
-            border-top: 1px solid var(--border);
-        }
-
+        .sidebar-footer { padding: 12px; border-top: 1px solid var(--border); }
+        
         .sidebar-user {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 16px;
-            border-radius: var(--radius-sm);
-            background: var(--bg3);
-            margin-bottom: 8px;
+            display: flex; align-items: center; gap: 10px;
+            padding: 12px 16px; border-radius: var(--radius-sm);
+            background: var(--bg3); margin-bottom: 8px;
         }
-
         .sidebar-user-avatar {
-            width: 32px;
-            height: 32px;
-            background: var(--primary);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            font-weight: 700;
+            width: 32px; height: 32px; background: var(--primary);
+            color: white; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; font-weight: 700;
         }
+        .sidebar-user-name { font-size: 13px; font-weight: 700; }
+        .sidebar-user-role { font-size: 11px; color: var(--text3); }
 
-        .sidebar-user-info {
-            flex: 1;
-        }
-
-        .sidebar-user-name {
-            font-size: 13px;
-            font-weight: 700;
-        }
-
-        .sidebar-user-role {
-            font-size: 11px;
-            color: var(--text3);
-        }
-
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
+        /* === ОСНОВНОЙ КОНТЕНТ === */
+        .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
 
         .topbar {
-            height: 64px;
-            background: var(--bg2);
+            height: 64px; background: var(--bg2);
             border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 32px;
-            flex-shrink: 0;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 32px; flex-shrink: 0;
         }
+        .topbar-title { font-size: 18px; font-weight: 700; }
 
-        .topbar-title {
-            font-size: 18px;
-            font-weight: 700;
-        }
-
-        .topbar-actions {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
+        /* === КНОПКИ === */
         .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 20px;
-            border-radius: var(--radius-sm);
-            font-size: 14px;
-            font-weight: 700;
-            border: none;
-            cursor: pointer;
-            transition: all 0.15s ease;
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 10px 20px; border-radius: var(--radius-sm);
+            font-size: 14px; font-weight: 700; border: none;
+            cursor: pointer; transition: all 0.15s ease;
         }
-
         .btn-primary {
             background: linear-gradient(135deg, var(--primary), #4A7BA7);
-            color: white;
-            box-shadow: 0 2px 8px rgba(44,90,141,0.3);
+            color: white; box-shadow: 0 2px 8px rgba(44,90,141,0.3);
         }
-
         .btn-primary:hover {
             background: linear-gradient(135deg, var(--primary-hover), #3A6B97);
             box-shadow: 0 4px 12px rgba(44,90,141,0.4);
         }
+        .btn-ghost { background: var(--bg3); color: var(--text2); }
+        .btn-ghost:hover { background: var(--border); color: var(--text); }
+        .btn svg { width: 16px; height: 16px; }
 
-        .btn-ghost {
-            background: var(--bg3);
-            color: var(--text2);
-        }
+        .page-content { flex: 1; overflow-y: auto; padding: 24px 32px; }
+        .page { display: none; }
+        .page.active { display: block; }
 
-        .btn-ghost:hover {
-            background: var(--border);
-            color: var(--text);
-        }
-
-        .btn-sm {
-            padding: 6px 12px;
-            font-size: 13px;
-        }
-
-        .btn-icon {
-            width: 36px;
-            height: 36px;
-            padding: 0;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--bg3);
-            border: none;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            color: var(--text2);
-            transition: all 0.15s ease;
-        }
-
-        .btn-icon:hover {
-            background: var(--border);
-            color: var(--text);
-        }
-
-        .btn svg {
-            width: 16px;
-            height: 16px;
-        }
-
-        .page-content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 24px 32px;
-        }
-
-        .page {
-            display: none;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        /* Cards */
+        /* === КАРТОЧКИ И ТАБЛИЦЫ === */
         .card {
-            background: var(--bg2);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
+            background: var(--bg2); border: 1px solid var(--border);
+            border-radius: var(--radius); box-shadow: var(--shadow);
         }
-
         .card-header {
-            padding: 20px 24px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            padding: 20px 24px; border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
         }
+        .card-title { font-size: 16px; font-weight: 700; }
+        .card-body { padding: 20px 24px; }
 
-        .card-title {
-            font-size: 16px;
-            font-weight: 700;
-        }
-
-        .card-body {
-            padding: 20px 24px;
-        }
-
-        /* Table */
-        .table-wrap {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
+        table { width: 100%; border-collapse: collapse; }
         thead th {
-            padding: 12px 16px;
-            text-align: left;
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--text3);
-            border-bottom: 2px solid var(--border);
-            background: var(--bg3);
+            padding: 12px 16px; text-align: left;
+            font-size: 12px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.5px; color: var(--text3);
+            border-bottom: 2px solid var(--border); background: var(--bg3);
         }
+        tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s ease; }
+        tbody tr:hover { background: var(--bg3); }
+        tbody td { padding: 14px 16px; font-size: 14px; }
 
-        tbody tr {
-            border-bottom: 1px solid var(--border);
-            transition: background 0.15s ease;
-        }
-
-        tbody tr:hover {
-            background: var(--bg3);
-        }
-
-        tbody td {
-            padding: 14px 16px;
-            font-size: 14px;
-        }
-
-        /* Badge */
+        /* === БЕЙДЖИ (СТАТУСЫ) === */
         .badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
+            display: inline-flex; align-items: center;
+            padding: 4px 10px; border-radius: 20px;
+            font-size: 11px; font-weight: 700;
         }
+        .badge-blue { background: var(--primary-light); color: var(--primary); }
+        .badge-green { background: var(--green-light); color: var(--green); }
+        .badge-red { background: var(--red-light); color: var(--red); }
+        .badge-yellow { background: var(--yellow-light); color: var(--yellow); }
 
-        .badge-blue {
-            background: var(--primary-light);
-            color: var(--primary);
-        }
-
-        .badge-green {
-            background: var(--green-light);
-            color: var(--green);
-        }
-
-        .badge-red {
-            background: var(--red-light);
-            color: var(--red);
-        }
-
-        .badge-yellow {
-            background: var(--yellow-light);
-            color: var(--yellow);
-        }
-
-        /* Form */
-        .form-group {
-            margin-bottom: 16px;
-        }
-
+        /* === ФОРМЫ И МОДАЛКИ === */
+        .form-group { margin-bottom: 16px; }
         .form-label {
-            display: block;
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--text2);
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            display: block; font-size: 12px; font-weight: 700;
+            color: var(--text2); margin-bottom: 6px;
+            text-transform: uppercase; letter-spacing: 0.5px;
         }
-
         .form-control {
-            width: 100%;
-            padding: 10px 14px;
-            background: var(--bg);
-            border: 1.5px solid var(--border);
-            border-radius: var(--radius-sm);
-            color: var(--text);
-            font-size: 14px;
-            outline: none;
-            transition: border-color 0.15s ease;
+            width: 100%; padding: 10px 14px;
+            background: var(--bg); border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm); color: var(--text);
+            font-size: 14px; outline: none; transition: border-color 0.15s ease;
         }
+        .form-control:focus { border-color: var(--primary); }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
-        .form-control:focus {
-            border-color: var(--primary);
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        /* Modal */
         .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(15,23,42,0.5);
-            backdrop-filter: blur(4px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            opacity: 0;
-            pointer-events: none;
+            position: fixed; inset: 0;
+            background: rgba(15,23,42,0.5); backdrop-filter: blur(4px);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 1000; opacity: 0; pointer-events: none;
             transition: opacity 0.2s ease;
         }
-
-        .modal-overlay.open {
-            opacity: 1;
-            pointer-events: all;
-        }
-
+        .modal-overlay.open { opacity: 1; pointer-events: all; }
         .modal {
-            background: var(--bg2);
-            border-radius: 16px;
+            background: var(--bg2); border-radius: 16px;
             box-shadow: 0 8px 32px rgba(30,58,95,0.15);
-            width: 100%;
-            max-width: 560px;
-            max-height: 90vh;
-            overflow-y: auto;
-            transform: translateY(8px);
-            transition: transform 0.2s ease;
+            width: 100%; max-width: 560px; max-height: 90vh; overflow-y: auto;
         }
-
-        .modal-overlay.open .modal {
-            transform: translateY(0);
-        }
-
         .modal-header {
-            padding: 24px 28px 20px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            padding: 24px 28px 20px; border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
             background: linear-gradient(135deg, var(--primary-light) 0%, var(--bg2) 100%);
         }
-
-        .modal-title {
-            font-size: 18px;
-            font-weight: 800;
-        }
-
+        .modal-title { font-size: 18px; font-weight: 800; }
         .modal-close {
-            width: 32px;
-            height: 32px;
-            background: var(--bg3);
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            color: var(--text2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
+            width: 32px; height: 32px; background: var(--bg3);
+            border: none; border-radius: 8px; cursor: pointer;
+            color: var(--text2); display: flex; align-items: center; justify-content: center;
         }
-
-        .modal-body {
-            padding: 24px 28px;
-        }
-
+        .modal-body { padding: 24px 28px; }
         .modal-footer {
-            padding: 20px 28px;
-            border-top: 1px solid var(--border);
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
+            padding: 20px 28px; border-top: 1px solid var(--border);
+            display: flex; justify-content: flex-end; gap: 10px;
             background: var(--bg);
         }
 
-        /* Stats */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-
+        /* === СТАТИСТИКА (DASHBOARD) === */
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
         .stat-card {
-            background: var(--bg2);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 20px;
-            box-shadow: var(--shadow);
+            background: var(--bg2); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow);
         }
-
         .stat-label {
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--text3);
-            margin-bottom: 8px;
+            font-size: 12px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.5px; color: var(--text3); margin-bottom: 8px;
         }
+        .stat-value { font-size: 28px; font-weight: 900; color: var(--text); line-height: 1; }
+        .stat-sub { font-size: 12px; color: var(--text3); margin-top: 4px; }
 
-        .stat-value {
-            font-size: 28px;
-            font-weight: 900;
-            color: var(--text);
-            line-height: 1;
-        }
-
-        .stat-sub {
-            font-size: 12px;
-            color: var(--text3);
-            margin-top: 4px;
-        }
-
-        /* Schedule Grid */
-        .schedule-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 24px;
-        }
-
-        .schedule-nav {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .schedule-date {
-            font-size: 20px;
-            font-weight: 800;
-            min-width: 200px;
-            text-align: center;
-        }
-
+        /* === РАСПИСАНИЕ === */
+        .schedule-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+        .schedule-nav { display: flex; align-items: center; gap: 8px; }
+        .schedule-date { font-size: 20px; font-weight: 800; min-width: 200px; text-align: center; }
         .schedule-grid {
-            display: grid;
-            grid-template-columns: 80px repeat(7, 1fr);
-            gap: 1px;
-            background: var(--border);
-            border-radius: var(--radius);
-            overflow: hidden;
+            display: grid; grid-template-columns: 80px repeat(7, 1fr); gap: 1px;
+            background: var(--border); border-radius: var(--radius); overflow: hidden;
         }
-
-        .schedule-cell {
-            background: var(--bg2);
-            padding: 8px;
-            min-height: 80px;
-            position: relative;
-        }
-
+        .schedule-cell { background: var(--bg2); padding: 8px; min-height: 80px; position: relative; }
         .schedule-time {
-            background: var(--bg3);
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text3);
-            display: flex;
-            align-items: flex-start;
-            justify-content: center;
-            padding-top: 12px;
+            background: var(--bg3); font-size: 12px; font-weight: 600;
+            color: var(--text3); display: flex; align-items: flex-start; justify-content: center; padding-top: 12px;
         }
-
         .schedule-day-header {
-            background: var(--bg3);
-            text-align: center;
-            padding: 12px 8px;
-            font-weight: 700;
-            font-size: 13px;
+            background: var(--bg3); text-align: center; padding: 12px 8px;
+            font-weight: 700; font-size: 13px;
         }
-
-        .schedule-day-header .day-num {
-            font-size: 20px;
-            font-weight: 800;
-            display: block;
-            margin-top: 2px;
-        }
-
-        .schedule-day-header.today {
-            background: var(--primary);
-            color: white;
-        }
-
+        .schedule-day-header .day-num { font-size: 20px; font-weight: 800; display: block; margin-top: 2px; }
+        .schedule-day-header.today { background: var(--primary); color: white; }
+        
         .schedule-event {
-            background: var(--primary-light);
-            border-left: 3px solid var(--primary);
-            border-radius: 6px;
-            padding: 6px 8px;
-            margin-bottom: 4px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: transform 0.1s ease;
+            background: var(--primary-light); border-left: 3px solid var(--primary);
+            border-radius: 6px; padding: 6px 8px; margin-bottom: 4px;
+            font-size: 12px; cursor: pointer; transition: transform 0.1s ease;
         }
+        .schedule-event:hover { transform: translateX(2px); }
+        .schedule-event .event-time { font-weight: 700; color: var(--primary); }
+        .schedule-event .event-name { font-weight: 600; margin-top: 2px; }
+        .schedule-event .event-room { color: var(--text3); font-size: 11px; }
+        .schedule-event.done { background: var(--green-light); border-color: var(--green); }
+        .schedule-event.done .event-time { color: var(--green); }
 
-        .schedule-event:hover {
-            transform: translateX(2px);
-        }
-
-        .schedule-event .event-time {
-            font-weight: 700;
-            color: var(--primary);
-        }
-
-        .schedule-event .event-name {
-            font-weight: 600;
-            margin-top: 2px;
-        }
-
-        .schedule-event .event-room {
-            color: var(--text3);
-            font-size: 11px;
-        }
-
-        .schedule-event.done {
-            background: var(--green-light);
-            border-color: var(--green);
-        }
-
-        .schedule-event.done .event-time {
-            color: var(--green);
-        }
-
-        /* Students Grid */
-        .students-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 16px;
-        }
-
-        .student-card {
-            background: var(--bg2);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 20px;
-            box-shadow: var(--shadow);
-            cursor: pointer;
-            transition: all 0.15s ease;
-        }
-
-        .student-card:hover {
-            border-color: var(--primary);
-            box-shadow: var(--shadow-md);
-            transform: translateY(-2px);
-        }
-
-        .student-card-header {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            margin-bottom: 12px;
-        }
-
-        .student-avatar {
-            width: 44px;
-            height: 44px;
-            background: var(--primary-light);
-            color: var(--primary);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            font-weight: 800;
-            flex-shrink: 0;
-        }
-
-        .student-name {
-            font-size: 16px;
-            font-weight: 700;
-            margin-bottom: 2px;
-        }
-
-        .student-subject {
-            font-size: 13px;
-            color: var(--text3);
-        }
-
-        .student-info {
-            margin-bottom: 12px;
-        }
-
-        .student-info-row {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            color: var(--text2);
-            margin-bottom: 4px;
-        }
-
-        .student-info-row svg {
-            width: 14px;
-            height: 14px;
-            color: var(--text3);
-        }
-
-        .student-footer {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding-top: 12px;
-            border-top: 1px solid var(--border);
-        }
-
-        .student-rate {
-            font-size: 15px;
-            font-weight: 800;
-        }
-
-        .student-actions {
-            display: flex;
-            gap: 6px;
-        }
-
-        /* Toolbar */
-        .toolbar {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .search-box {
-            position: relative;
-            flex: 1;
-            min-width: 200px;
-        }
-
-        .search-box svg {
-            position: absolute;
-            left: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 16px;
-            height: 16px;
-            color: var(--text3);
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 10px 14px 10px 38px;
-            background: var(--bg2);
-            border: 1.5px solid var(--border);
-            border-radius: var(--radius-sm);
-            color: var(--text);
-            font-size: 14px;
-            outline: none;
-        }
-
-        .search-box input:focus {
-            border-color: var(--primary);
-        }
-
-        .filter-pills {
-            display: flex;
-            gap: 8px;
-        }
-
-        .pill {
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 700;
-            border: 1.5px solid var(--border);
-            background: var(--bg2);
-            color: var(--text2);
-            cursor: pointer;
-            transition: all 0.15s ease;
-        }
-
-        .pill:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-
-        .pill.active {
-            background: var(--primary);
-            border-color: var(--primary);
-            color: white;
-        }
-
-        /* Empty state */
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--text3);
-        }
-
-        .empty-state svg {
-            width: 56px;
-            height: 56px;
-            margin-bottom: 20px;
-            opacity: 0.4;
-        }
-
-        .empty-state h3 {
-            font-size: 18px;
-            color: var(--text2);
-            margin-bottom: 8px;
-        }
-
-        /* Toast */
-        #toast-container {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .toast {
-            background: var(--text);
-            color: var(--bg);
-            padding: 14px 20px;
-            border-radius: var(--radius-sm);
-            font-size: 14px;
-            font-weight: 600;
-            box-shadow: var(--shadow-md);
-            animation: slideIn 0.2s ease;
-        }
-
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--border);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--text3);
-        }
-
-        /* Quick actions */
-        .quick-actions {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-
-        .quick-action-card {
-            background: var(--bg2);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 24px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.15s ease;
-        }
-
-        .quick-action-card:hover {
-            border-color: var(--primary);
-            box-shadow: var(--shadow-md);
-        }
-
-        .quick-action-icon {
-            width: 48px;
-            height: 48px;
-            background: var(--primary-light);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 12px;
-            color: var(--primary);
-        }
-
-        .quick-action-title {
-            font-size: 14px;
-            font-weight: 700;
-        }
-
-        /* Attendance */
-        .attendance-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
-            border: 1.5px solid var(--border);
-            border-radius: var(--radius-sm);
-            margin-bottom: 8px;
-            cursor: pointer;
-            transition: all 0.15s ease;
-        }
-
-        .attendance-item:hover {
-            border-color: var(--primary);
-        }
-
-        .attendance-item.present {
-            border-color: var(--green);
-            background: var(--green-light);
-        }
-
-        .attendance-item.absent {
-            border-color: var(--red);
-            background: var(--red-light);
-        }
-
-        .attendance-checkbox {
-            width: 24px;
-            height: 24px;
-            border: 2px solid var(--border);
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            font-size: 14px;
-        }
-
-        .attendance-item.present .attendance-checkbox {
-            background: var(--green);
-            border-color: var(--green);
-            color: white;
-        }
-
-        .attendance-item.absent .attendance-checkbox {
-            background: var(--red);
-            border-color: var(--red);
-            color: white;
-        }
-
-        /* Responsive */
-        @media (max-width: 1024px) {
-            .sidebar {
-                width: 72px;
-            }
-            .sidebar-title, .sidebar-subtitle, .nav-item span, .sidebar-user-info {
-                display: none;
-            }
-            .nav-item {
-                justify-content: center;
-                padding: 12px;
-            }
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .sidebar {
-                display: none;
-            }
-            .page-content {
-                padding: 16px;
-            }
-            .stats-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            .form-row {
-                grid-template-columns: 1fr;
-            }
+        /* Адаптив для мобильных */
+        @media(max-width: 1024px) {
+            .sidebar { width: 72px; }
+            .sidebar-title, .sidebar-subtitle, .nav-item span, .sidebar-user-info { display: none; }
+            .nav-item { justify-content: center; padding: 12px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
 </head>
 <body>
-    <div id="app">
-        <!-- Sidebar -->
-        <nav class="sidebar">
-            <div class="sidebar-header">
-                <div class="sidebar-logo">
-                    <div class="sidebar-logo-icon">🎓</div>
-                    <div>
-                        <div class="sidebar-title">Интерактивная школа МУДРО</div>
-                        <div class="sidebar-subtitle" id="current-date"></div>
-                    </div>
+
+<div id="app">
+    <!-- SIDEBAR -->
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <div class="sidebar-logo-icon">🎓</div>
+                <div>
+                    <div class="sidebar-title">Интерактивная школа МУДРО</div>
+                    <div class="sidebar-subtitle" id="current-date"></div>
                 </div>
-            </div>
-
-            <div class="sidebar-nav">
-                <button class="nav-item active" data-page="schedule">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <rect x="3" y="4" width="18" height="18" rx="2"/>
-                        <line x1="16" y1="2" x2="16" y2="6"/>
-                        <line x1="8" y1="2" x2="8" y2="6"/>
-                        <line x1="3" y1="10" x2="21" y2="10"/>
-                    </svg>
-                    <span>Расписание</span>
-                </button>
-
-                <button class="nav-item" data-page="students">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                        <circle cx="9" cy="7" r="4"/>
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                    </svg>
-                    <span>Ученики</span>
-                </button>
-
-                <button class="nav-item" data-page="teachers">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                        <circle cx="12" cy="7" r="4"/>
-                    </svg>
-                    <span>Преподаватели</span>
-                </button>
-
-                <button class="nav-item" data-page="groups">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                        <circle cx="9" cy="7" r="4"/>
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                    </svg>
-                    <span>Группы</span>
-                </button>
-
-                <button class="nav-item" data-page="attendance">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M9 11l3 3L22 4"/>
-                        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
-                    </svg>
-                    <span>Посещаемость</span>
-                </button>
-
-                <button class="nav-item" data-page="finance">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <line x1="12" y1="1" x2="12" y2="23"/>
-                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-                    </svg>
-                    <span>Финансы</span>
-                </button>
-
-                <button class="nav-item" data-page="reports">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                        <polyline points="14 2 14 8 20 8"/>
-                        <line x1="16" y1="13" x2="8" y2="13"/>
-                        <line x1="16" y1="17" x2="8" y2="17"/>
-                    </svg>
-                    <span>Отчёты</span>
-                </button>
-            </div>
-
-            <div class="sidebar-footer">
-                <div class="sidebar-user">
-                    <div class="sidebar-user-avatar" id="user-avatar">А</div>
-                    <div class="sidebar-user-info">
-                        <div class="sidebar-user-name" id="user-name">Администратор</div>
-                        <div class="sidebar-user-role" id="user-role">Полный доступ</div>
-                    </div>
-                </div>
-                <button class="nav-item" style="color: var(--red);" onclick="showSettings()">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <circle cx="12" cy="12" r="3"/>
-                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-                    </svg>
-                    <span>Настройки</span>
-                </button>
-            </div>
-        </nav>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <div class="topbar">
-                <div class="topbar-title" id="page-title">Расписание</div>
-                <div class="topbar-actions">
-                    <button class="btn btn-primary" id="btn-add" onclick="openAddModal()">
-                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <line x1="12" y1="5" x2="12" y2="19"/>
-                            <line x1="5" y1="12" x2="19" y2="12"/>
-                        </svg>
-                        <span id="btn-add-text">Добавить урок</span>
-                    </button>
-                </div>
-            </div>
-
-            <div class="page-content">
-                <!-- Schedule Page -->
-                <div class="page active" id="page-schedule">
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-label">Уроков сегодня</div>
-                            <div class="stat-value" id="stat-today-lessons">0</div>
-                            <div class="stat-sub" id="stat-today-sub">Запланировано</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-label">Проведено</div>
-                            <div class="stat-value" id="stat-done">0</div>
-                            <div class="stat-sub">на этой неделе</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-label">Активных учеников</div>
-                            <div class="stat-value" id="stat-students">0</div>
-                            <div class="stat-sub">записано</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-label">Доход за неделю</div>
-                            <div class="stat-value" id="stat-income">0 ₽</div>
-                            <div class="stat-sub">прогнозируемый</div>
-                        </div>
-                    </div>
-
-                    <div class="schedule-header">
-                        <div class="schedule-nav">
-                            <button class="btn-icon" onclick="changeWeek(-1)">
-                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <polyline points="15 18 9 12 15 6"/>
-                                </svg>
-                            </button>
-                            <div class="schedule-date" id="schedule-date">Эта неделя</div>
-                            <button class="btn-icon" onclick="changeWeek(1)">
-                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <polyline points="9 18 15 12 9 6"/>
-                                </svg>
-                            </button>
-                            <button class="btn btn-ghost btn-sm" onclick="goToday()">Сегодня</button>
-                        </div>
-                        <div class="filter-pills">
-                            <button class="pill active" onclick="filterSchedule('all', this)">Все</button>
-                            <button class="pill" onclick="filterSchedule('planned', this)">Запланировано</button>
-                            <button class="pill" onclick="filterSchedule('done', this)">Проведено</button>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="schedule-grid" id="schedule-grid">
-                            <!-- Generated by JS -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Students Page -->
-                <div class="page" id="page-students">
-                    <div class="toolbar">
-                        <div class="search-box">
-                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <circle cx="11" cy="11" r="8"/>
-                                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                            </svg>
-                            <input type="text" id="student-search" placeholder="Поиск по имени или предмету..." oninput="filterStudents()">
-                        </div>
-                        <div class="filter-pills">
-                            <button class="pill active" onclick="filterStudentsByType('all', this)">Все</button>
-                            <button class="pill" onclick="filterStudentsByType('individual', this)">Индивидуальные</button>
-                            <button class="pill" onclick="filterStudentsByType('group', this)">Групповые</button>
-                        </div>
-                    </div>
-
-                    <div class="students-grid" id="students-grid">
-                        <!-- Generated by JS -->
-                    </div>
-                </div>
-
-                <!-- Teachers Page -->
-                <div class="page" id="page-teachers">
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title">Преподаватели школы</div>
-                            <button class="btn btn-primary btn-sm" onclick="openTeacherModal()">Добавить</button>
-                        </div>
-                        <div class="table-wrap">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>ФИО</th>
-                                        <th>Предметы</th>
-                                        <th>Телефон</th>
-                                        <th>Email</th>
-                                        <th>Группы</th>
-                                        <th>Действия</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="teachers-tbody">
-                                    <!-- Generated by JS -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Groups Page -->
-                <div class="page" id="page-groups">
-                    <div class="toolbar">
-                        <div class="search-box">
-                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <circle cx="11" cy="11" r="8"/>
-                                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                            </svg>
-                            <input type="text" placeholder="Поиск группы..." oninput="filterGroups(this.value)">
-                        </div>
-                    </div>
-                    <div id="groups-list">
-                        <!-- Generated by JS -->
-                    </div>
-                </div>
-
-                <!-- Attendance Page -->
-                <div class="page" id="page-attendance">
-                    <div class="toolbar">
-                        <select class="form-control" style="width: 200px;" id="attendance-date-select" onchange="renderAttendance()">
-                            <!-- Generated by JS -->
-                        </select>
-                        <select class="form-control" style="width: 200px;" id="attendance-group-select" onchange="renderAttendance()">
-                            <option value="">Все группы</option>
-                        </select>
-                    </div>
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title">Отметка посещаемости</div>
-                            <button class="btn btn-ghost btn-sm" onclick="markAllPresent()">✓ Все присутствовали</button>
-                        </div>
-                        <div class="card-body" id="attendance-list">
-                            <!-- Generated by JS -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Finance Page -->
-                <div class="page" id="page-finance">
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-label">Оплачено за месяц</div>
-                            <div class="stat-value" id="fin-paid">0 ₽</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-label">Ожидается</div>
-                            <div class="stat-value" id="fin-expected">0 ₽</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-label">Долгов</div>
-                            <div class="stat-value" id="fin-debt">0 ₽</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-label">Уроков в месяц</div>
-                            <div class="stat-value" id="fin-lessons">0</div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title">История оплат</div>
-                            <button class="btn btn-primary btn-sm" onclick="openPaymentModal()">Добавить оплату</button>
-                        </div>
-                        <div class="table-wrap">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Ученик</th>
-                                        <th>Сумма</th>
-                                        <th>Дата</th>
-                                        <th>Примечание</th>
-                                        <th>Действия</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="payments-tbody">
-                                    <!-- Generated by JS -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Reports Page -->
-                <div class="page" id="page-reports">
-                    <div class="quick-actions">
-                        <div class="quick-action-card" onclick="generateReport('attendance')">
-                            <div class="quick-action-icon">
-                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="24" height="24">
-                                    <path d="M9 11l3 3L22 4"/>
-                                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
-                                </svg>
-                            </div>
-                            <div class="quick-action-title">Отчёт по посещаемости</div>
-                        </div>
-                        <div class="quick-action-card" onclick="generateReport('finance')">
-                            <div class="quick-action-icon">
-                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="24" height="24">
-                                    <line x1="12" y1="1" x2="12" y2="23"/>
-                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-                                </svg>
-                            </div>
-                            <div class="quick-action-title">Финансовый отчёт</div>
-                        </div>
-                        <div class="quick-action-card" onclick="generateReport('progress')">
-                            <div class="quick-action-icon">
-                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="24" height="24">
-                                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-                                </svg>
-                            </div>
-                            <div class="quick-action-title">Успеваемость</div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title">Создание отчёта</div>
-                        </div>
-                        <div class="card-body">
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label class="form-label">Период</label>
-                                    <select class="form-control" id="report-period">
-                                        <option value="week">Неделя</option>
-                                        <option value="month">Месяц</option>
-                                        <option value="quarter">Квартал</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Группа</label>
-                                    <select class="form-control" id="report-group">
-                                        <option value="all">Все группы</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <button class="btn btn-primary" onclick="generateReport('custom')">Сформировать отчёт</button>
-                            <div id="report-result" style="margin-top: 20px;"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <!-- Modal: Add/Edit Lesson -->
-    <div class="modal-overlay" id="modal-lesson">
-        <div class="modal">
-            <div class="modal-header">
-                <span class="modal-title" id="lesson-modal-title">Новый урок</span>
-                <button class="modal-close" onclick="closeModal('modal-lesson')">✕</button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label class="form-label">Ученик / Группа</label>
-                    <select class="form-control" id="lesson-student"></select>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Дата</label>
-                        <input type="date" class="form-control" id="lesson-date">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Предмет</label>
-                        <input type="text" class="form-control" id="lesson-subject" placeholder="Английский язык">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Начало</label>
-                        <input type="time" class="form-control" id="lesson-start" value="10:00">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Конец</label>
-                        <input type="time" class="form-control" id="lesson-end" value="11:00">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Кабинет</label>
-                        <input type="text" class="form-control" id="lesson-room" placeholder="№ 1">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Преподаватель</label>
-                        <select class="form-control" id="lesson-teacher"></select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Ссылка Telemost</label>
-                    <input type="url" class="form-control" id="lesson-telemost" placeholder="https://telemost.ru/...">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Заметки / ДЗ</label>
-                    <textarea class="form-control" id="lesson-notes" rows="3" placeholder="Тема урока, домашнее задание..."></textarea>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Повторение</label>
-                    <select class="form-control" id="lesson-repeat">
-                        <option value="">Без повторения</option>
-                        <option value="weekly">Каждую неделю</option>
-                        <option value="biweekly">Каждые 2 недели</option>
-                    </select>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-ghost" onclick="closeModal('modal-lesson')">Отмена</button>
-                <button class="btn btn-primary" onclick="saveLesson()">Сохранить</button>
             </div>
         </div>
-    </div>
 
-    <!-- Modal: Add/Edit Student -->
-    <div class="modal-overlay" id="modal-student">
-        <div class="modal">
-            <div class="modal-header">
-                <span class="modal-title" id="student-modal-title">Новый ученик</span>
-                <button class="modal-close" onclick="closeModal('modal-student')">✕</button>
-            </div>
-            <div class="modal-body">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">ФИО</label>
-                        <input type="text" class="form-control" id="student-name" placeholder="Фёдоров Фёдор">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Тип</label>
-                        <select class="form-control" id="student-type">
-                            <option value="individual">Индивидуальный</option>
-                            <option value="group">Групповой</option>
-                        </select>
-                    </div>
+        <div class="sidebar-nav">
+            <button class="nav-item active" data-page="schedule">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <rect x="3" y="4" width="18" height="18" rx="2"/>
+                    <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+                    <line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+                <span>Расписание</span>
+            </button>
+            <button class="nav-item" data-page="students">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+                <span>Ученики</span>
+            </button>
+            <button class="nav-item" data-page="teachers">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <span>Преподаватели</span>
+            </button>
+            <button class="nav-item" data-page="attendance">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                </svg>
+                <span>Посещаемость</span>
+            </button>
+            <button class="nav-item" data-page="finance">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <line x1="12" y1="1" x2="12" y2="23"/>
+                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                </svg>
+                <span>Финансы</span>
+            </button>
+        </div>
+
+        <div class="sidebar-footer">
+            <div class="sidebar-user">
+                <div class="sidebar-user-avatar">А</div>
+                <div class="sidebar-user-info">
+                    <div class="sidebar-user-name">Администратор</div>
+                    <div class="sidebar-user-role">Полный доступ</div>
                 </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Предмет</label>
-                        <input type="text" class="form-control" id="student-subject" placeholder="Английский язык">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Стоимость урока</label>
-                        <input type="number" class="form-control" id="student-rate" placeholder="1150">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Группа</label>
-                    <select class="form-control" id="student-group"></select>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Телефон</label>
-                        <input type="tel" class="form-control" id="student-phone" placeholder="+7 (900) 123-45-67">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Email</label>
-                        <input type="email" class="form-control" id="student-email" placeholder="email@example.com">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Заметки</label>
-                    <textarea class="form-control" id="student-notes" rows="2" placeholder="Особые отметки..."></textarea>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-ghost" onclick="closeModal('modal-student')">Отмена</button>
-                <button class="btn btn-primary" onclick="saveStudent()">Сохранить</button>
             </div>
         </div>
-    </div>
+    </nav>
 
-    <!-- Modal: Add Teacher -->
-    <div class="modal-overlay" id="modal-teacher">
-        <div class="modal">
-            <div class="modal-header">
-                <span class="modal-title">Новый преподаватель</span>
-                <button class="modal-close" onclick="closeModal('modal-teacher')"></button>
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <div class="topbar">
+            <div class="topbar-title" id="page-title">Расписание</div>
+            <div class="topbar-actions">
+                <button class="btn btn-primary" id="btn-add" onclick="openAddModal()">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                    <span id="btn-add-text">Добавить урок</span>
+                </button>
             </div>
-            <div class="modal-body">
+        </div>
+
+        <div class="page-content">
+            <!-- PAGE: SCHEDULE -->
+            <div class="page active" id="page-schedule">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Уроков сегодня</div>
+                        <div class="stat-value" id="stat-today-lessons">0</div>
+                        <div class="stat-sub">Запланировано</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Проведено</div>
+                        <div class="stat-value" id="stat-done">0</div>
+                        <div class="stat-sub">на этой неделе</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Активных учеников</div>
+                        <div class="stat-value" id="stat-students">0</div>
+                        <div class="stat-sub">записано</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Доход за неделю</div>
+                        <div class="stat-value" id="stat-income">0 ₽</div>
+                        <div class="stat-sub">прогнозируемый</div>
+                    </div>
+                </div>
+
+                <div class="schedule-header">
+                    <div class="schedule-nav">
+                        <button class="btn btn-ghost btn-sm" onclick="changeWeek(-1)">← Назад</button>
+                        <div class="schedule-date" id="schedule-date">Эта неделя</div>
+                        <button class="btn btn-ghost btn-sm" onclick="changeWeek(1)">Вперёд →</button>
+                        <button class="btn btn-ghost btn-sm" onclick="goToday()">Сегодня</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="schedule-grid" id="schedule-grid">
+                        <!-- Генерируется через JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- PAGE: STUDENTS -->
+            <div class="page" id="page-students">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Список учеников</div>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ФИО</th>
+                                    <th>Предмет</th>
+                                    <th>Телефон</th>
+                                    <th>Ставка</th>
+                                    <th>Действия</th>
+                                </tr>
+                            </thead>
+                            <tbody id="students-tbody">
+                                <!-- Генерируется через JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- PLACEHOLDERS FOR OTHER PAGES -->
+            <div class="page" id="page-teachers"><div class="card"><div class="card-body">Раздел в разработке</div></div></div>
+            <div class="page" id="page-attendance"><div class="card"><div class="card-body">Раздел в разработке</div></div></div>
+            <div class="page" id="page-finance"><div class="card"><div class="card-body">Раздел в разработке</div></div></div>
+        </div>
+    </main>
+</div>
+
+<!-- MODAL: ADD LESSON -->
+<div class="modal-overlay" id="modal-lesson">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="modal-title">Новый урок</span>
+            <button class="modal-close" onclick="closeModal('modal-lesson')">✕</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label class="form-label">Ученик</label>
+                <select class="form-control" id="lesson-student"></select>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Дата</label>
+                    <input type="date" class="form-control" id="lesson-date">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Кабинет</label>
+                    <input type="text" class="form-control" id="lesson-room" placeholder="№ 1">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Начало</label>
+                    <input type="time" class="form-control" id="lesson-start" value="10:00">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Конец</label>
+                    <input type="time" class="form-control" id="lesson-end" value="11:00">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Ссылка Telemost</label>
+                <input type="url" class="form-control" id="lesson-telemost" placeholder="https://telemost.ru/...">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-ghost" onclick="closeModal('modal-lesson')">Отмена</button>
+            <button class="btn btn-primary" onclick="saveLesson()">Сохранить</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL: ADD STUDENT -->
+<div class="modal-overlay" id="modal-student">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="modal-title">Новый ученик</span>
+            <button class="modal-close" onclick="closeModal('modal-student')">✕</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-row">
                 <div class="form-group">
                     <label class="form-label">ФИО</label>
-                    <input type="text" class="form-control" id="teacher-name" placeholder="Иванова Мария Петровна">
+                    <input type="text" class="form-control" id="student-name" placeholder="Иванов Иван">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Предметы</label>
-                    <input type="text" class="form-control" id="teacher-subjects" placeholder="Английский, Французский">
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Телефон</label>
-                        <input type="tel" class="form-control" id="teacher-phone">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Email</label>
-                        <input type="email" class="form-control" id="teacher-email">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Роль</label>
-                    <select class="form-control" id="teacher-role">
-                        <option value="teacher">Преподаватель</option>
-                        <option value="admin">Администратор</option>
-                    </select>
+                    <label class="form-label">Предмет</label>
+                    <input type="text" class="form-control" id="student-subject" placeholder="Английский">
                 </div>
             </div>
-            <div class="modal-footer">
-                <button class="btn btn-ghost" onclick="closeModal('modal-teacher')">Отмена</button>
-                <button class="btn btn-primary" onclick="saveTeacher()">Сохранить</button>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Телефон</label>
+                    <input type="tel" class="form-control" id="student-phone" placeholder="+7 900 ...">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Ставка (₽)</label>
+                    <input type="number" class="form-control" id="student-rate" placeholder="1000">
+                </div>
             </div>
         </div>
-    </div>
-
-    <!-- Modal: Payment -->
-    <div class="modal-overlay" id="modal-payment">
-        <div class="modal">
-            <div class="modal-header">
-                <span class="modal-title">Добавить оплату</span>
-                <button class="modal-close" onclick="closeModal('modal-payment')">✕</button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label class="form-label">Ученик</label>
-                    <select class="form-control" id="payment-student"></select>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Сумма</label>
-                        <input type="number" class="form-control" id="payment-amount" placeholder="5000">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Дата</label>
-                        <input type="date" class="form-control" id="payment-date">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Примечание</label>
-                    <input type="text" class="form-control" id="payment-note" placeholder="Наличные, перевод...">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-ghost" onclick="closeModal('modal-payment')">Отмена</button>
-                <button class="btn btn-primary" onclick="savePayment()">Сохранить</button>
-            </div>
+        <div class="modal-footer">
+            <button class="btn btn-ghost" onclick="closeModal('modal-student')">Отмена</button>
+            <button class="btn btn-primary" onclick="saveStudent()">Сохранить</button>
         </div>
     </div>
+</div>
 
-    <!-- Toast Container -->
-    <div id="toast-container"></div>
+<script>
+    // Базовая логика переключения страниц
+    document.querySelectorAll('.nav-item').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('page-' + btn.dataset.page).classList.add('active');
+            document.getElementById('page-title').textContent = btn.querySelector('span').textContent;
+        });
+    });
 
-   <script>
-(function() {
-  'use strict';
+    function openModal(id) { document.getElementById(id).classList.add('open'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+    
+    // Заглушки для кнопок
+    function openAddModal() { 
+        alert("Здесь будет логика добавления (Урок или Ученик)"); 
+    }
+</script>
+<script>
+// ================= СОСТОЯНИЕ И ХРАНИЛИЩЕ =================
+const STORAGE_KEY = 'mudro_crm_v1';
 
-  // ================= STATE & STORAGE =================
-  const STORAGE_KEY = 'mudro_crm_v1';
-  const state = {
+let state = {
     students: [],
+    lessons: [],
     teachers: [],
     groups: [],
-    lessons: [],
     payments: [],
-    settings: { currency: '₽', theme: 'light', language: 'ru' }
-  };
-
-  function save() {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } 
-    catch (e) { console.error('Save error:', e); }
-  }
-
-  function load() {
-    try {
-      const d = localStorage.getItem(STORAGE_KEY);
-      if (d) Object.assign(state, JSON.parse(d));
-    } catch (e) { console.error('Load error:', e); }
-  }
-
-  // ================= UTILS =================
-  const $ = (sel) => document.querySelector(sel);
-  const $$ = (sel) => document.querySelectorAll(sel);
-  const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
-  const todayISO = () => new Date().toISOString().split('T')[0];
-  const formatDate = (iso) => iso ? new Date(iso).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' }) : '—';
-  const formatTime = (t) => t || '—';
-  const fmtMoney = (n) => `${Number(n || 0).toLocaleString('ru-RU')} ${state.settings.currency}`;
-
-  function toast(msg, type = 'success') {
-    const el = document.createElement('div');
-    el.className = `toast toast-${type}`;
-    el.textContent = msg;
-    document.getElementById('toast-container').appendChild(el);
-    setTimeout(() => el.remove(), 3000);
-  }
-
-  // ================= NAVIGATION =================
-  function switchTab(tabId) {
-    $$('.nav-item').forEach(b => b.classList.remove('active'));
-    $$('.page').forEach(p => p.classList.remove('active'));
-    
-    $(`[data-tab="${tabId}"]`)?.classList.add('active');
-    $(`#page-${tabId}`)?.classList.add('active');
-    
-    render(tabId);
-  }
-
-  // ================= RENDERERS =================
-  function render(tab) {
-    switch(tab) {
-      case 'dashboard': renderDashboard(); break;
-      case 'students': renderStudents(); break;
-      case 'schedule': renderSchedule(); break;
-      case 'teachers': renderTeachers(); break;
-      case 'groups': renderGroups(); break;
-      case 'attendance': renderAttendance(); break;
-      case 'finance': renderFinance(); break;
-      case 'reports': renderReports(); break;
-      case 'settings': renderSettings(); break;
+    settings: {
+        schoolName: 'Интерактивная школа МУДРО',
+        currency: '₽',
+        currentView: 'schedule'
     }
-  }
+};
 
-  function renderDashboard() {
+// Загрузка данных
+function loadState() {
+    try {
+        const data = localStorage.getItem(STORAGE_KEY);
+        if (data) {
+            const parsed = JSON.parse(data);
+            state = { ...state, ...parsed };
+        }
+    } catch (e) {
+        console.error('Ошибка загрузки данных:', e);
+    }
+}
+
+// Сохранение данных
+function saveState() {
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch (e) {
+        console.error('Ошибка сохранения данных:', e);
+    }
+}
+
+// ================= УТИЛИТЫ =================
+function uid() {
+    return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+}
+
+function todayISO() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+function fmtDate(iso) {
+    if (!iso) return '';
+    const [y, m, d] = iso.split('-');
+    return `${d}.${m}.${y}`;
+}
+
+function fmtMoney(n) {
+    return `${Number(n || 0).toLocaleString('ru-RU')} ${state.settings.currency}`;
+}
+
+function showToast(msg, type = 'success') {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.textContent = msg;
+    toast.style.background = type === 'success' ? 'var(--green)' : type === 'error' ? 'var(--red)' : 'var(--primary)';
+    container.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+}
+
+// ================= НАВИГАЦИЯ =================
+function switchView(viewId) {
+    // Обновляем активные пункты меню
+    document.querySelectorAll('.nav-item').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.page === viewId);
+    });
+    
+    // Обновляем активные страницы
+    document.querySelectorAll('.page').forEach(page => {
+        page.classList.toggle('active', page.id === `page-${viewId}`);
+    });
+    
+    // Обновляем заголовок
+    const titles = {
+        schedule: 'Расписание',
+        students: 'Ученики',
+        teachers: 'Преподаватели',
+        finance: 'Финансы',
+        attendance: 'Посещаемость'
+    };
+    document.getElementById('page-title').textContent = titles[viewId] || '';
+    document.getElementById('btn-add-text').textContent = viewId === 'schedule' ? 'Добавить урок' : 
+                                                         viewId === 'students' ? 'Добавить ученика' : 
+                                                         viewId === 'teachers' ? 'Добавить преподавателя' : 'Добавить';
+    
+    state.settings.currentView = viewId;
+    
+    // Рендерим содержимое страницы
+    renderView(viewId);
+}
+
+function renderView(viewId) {
+    switch(viewId) {
+        case 'schedule': renderSchedule(); break;
+        case 'students': renderStudents(); break;
+        case 'teachers': renderTeachers(); break;
+        case 'finance': renderFinance(); break;
+        case 'attendance': renderAttendance(); break;
+    }
+}
+    <script>
+// ================= РАСПИСАНИЕ =================
+let scheduleDate = new Date();
+
+function getWeekStart(date) {
+    const d = new Date(date);
+    const day = d.getDay();
+    const diff = day === 0 ? -6 : 1 - day;
+    d.setDate(d.getDate() + diff);
+    d.setHours(0, 0, 0, 0);
+    return d;
+}
+
+function renderSchedule() {
+    const ws = getWeekStart(scheduleDate);
+    const container = document.getElementById('schedule-grid');
+    const dayNames = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+    const monthNames = ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'];
+    
+    // Обновляем диапазон дат
+    const d1 = new Date(ws);
+    const d2 = new Date(ws);
+    d2.setDate(d2.getDate() + 6);
+    document.getElementById('schedule-date').textContent = 
+        `${d1.getDate()} ${monthNames[d1.getMonth()]} — ${d2.getDate()} ${monthNames[d2.getMonth()]} ${d2.getFullYear()}`;
+    
+    // Генерируем сетку на 7 дней
+    let html = '';
+    for (let i = 0; i < 7; i++) {
+        const currentDay = new Date(ws);
+        currentDay.setDate(ws.getDate() + i);
+        const iso = currentDay.toISOString().split('T')[0];
+        const isToday = iso === todayISO();
+        
+        // Находим уроки на этот день
+        const dayLessons = state.lessons
+            .filter(l => l.date === iso)
+            .sort((a, b) => (a.timeStart || '').localeCompare(b.timeStart || ''));
+        
+        html += `
+            <div class="schedule-day ${isToday ? 'today' : ''}" data-date="${iso}">
+                <div class="schedule-day-header">
+                    ${dayNames[i]}
+                    <span class="day-num">${currentDay.getDate()}</span>
+                </div>
+                <div class="schedule-day-content">
+                    ${dayLessons.length === 0 ? `
+                        <div class="empty-slot" onclick="openLessonModal('${iso}')">
+                            + Добавить
+                        </div>
+                    ` : ''}
+                    ${dayLessons.map(lesson => {
+                        const student = state.students.find(s => s.id === lesson.studentId);
+                        const statusClass = lesson.status === 'done' ? 'done' : '';
+                        return `
+                            <div class="schedule-event ${statusClass}" onclick="openLessonModal('${iso}', '${lesson.id}')">
+                                <div class="event-time">${lesson.timeStart || ''} – ${lesson.timeEnd || ''}</div>
+                                <div class="event-name">${student ? student.name : 'Без ученика'}</div>
+                                ${lesson.room ? `<div class="event-room">📍 Каб. ${lesson.room}</div>` : ''}
+                                ${lesson.telemostLink ? `<div class="event-room">🔗 Telemost</div>` : ''}
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            </div>
+        `;
+    }
+    
+    container.innerHTML = html;
+    updateStats();
+}
+
+function updateStats() {
     const today = todayISO();
     const todayLessons = state.lessons.filter(l => l.date === today).length;
     const activeStudents = state.students.filter(s => s.status === 'active').length;
     
-    let weekIncome = 0;
-    const now = new Date();
-    const ws = new Date(now.setDate(now.getDate() - now.getDay() + 1));
-    for(let i=0; i<7; i++) {
-      const d = new Date(ws.getTime() + i*86400000).toISOString().split('T')[0];
-      state.lessons.filter(l => l.date === d && l.status === 'done').forEach(l => {
-        const s = state.students.find(x => x.id === l.studentId);
-        weekIncome += s ? s.rate : 0;
-      });
-    }
-
-    $('#stat-today-lessons').textContent = todayLessons;
-    $('#stat-students').textContent = activeStudents;
-    $('#stat-income').textContent = fmtMoney(weekIncome);
-    $('#current-date').textContent = new Date().toLocaleDateString('ru-RU', { weekday: 'short', day: 'numeric', month: 'long' });
-  }
-
-  function renderStudents() {
-    const grid = $('#students-grid');
-    const search = ($('#students-search')?.value || '').toLowerCase();
-    const filtered = state.students.filter(s => 
-      s.name.toLowerCase().includes(search) || (s.subject || '').toLowerCase().includes(search)
-    );
-
-    if (!filtered.length) {
-      grid.innerHTML = `<div class="empty-state"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><h3>Нет учеников</h3><p>Добавьте первого ученика</p></div>`;
-      return;
-    }
-
-    grid.innerHTML = filtered.map(s => `
-      <div class="student-card" data-id="${s.id}">
-        <div class="student-card-header">
-          <div class="student-avatar">${s.name.charAt(0).toUpperCase()}</div>
-          <div>
-            <div class="student-name">${s.name}</div>
-            <div class="student-subject">${s.subject || '—'} ${s.type === 'group' ? '👥' : ''}</div>
-          </div>
-          <span class="badge ${s.status === 'active' ? 'badge-green' : 'badge-yellow'}">${s.status === 'active' ? 'Активен' : 'Пауза'}</span>
-        </div>
-        <div class="student-card-body">
-          ${s.phone ? `<div class="student-info-row">📞 ${s.phone}</div>` : ''}
-          ${s.group ? `<div class="student-info-row">📦 ${s.group}</div>` : ''}
-        </div>
-        <div class="student-footer">
-          <div class="student-rate">${fmtMoney(s.rate)}/урок</div>
-          <div class="student-actions">
-            <button class="btn-icon edit-btn" data-id="${s.id}" title="Редактировать">✏️</button>
-            <button class="btn-icon del-btn" data-id="${s.id}" title="Удалить">🗑️</button>
-          </div>
-        </div>
-      </div>
-    `).join('');
-  }
-
-  function renderSchedule() {
-    const container = $('#schedule-container');
-    const today = new Date();
-    const weekStart = new Date(today.setDate(today.getDate() - today.getDay() + 1));
-    const days = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
-    
-    let html = `<div class="schedule-header">
-      <div class="schedule-nav">
-        <button class="btn-icon" onclick="window._shiftWeek(-1)">⬅</button>
-        <div class="schedule-date" id="week-label">${formatDate(weekStart)} — ${formatDate(new Date(weekStart.getTime() + 6*86400000))}</div>
-        <button class="btn-icon" onclick="window._shiftWeek(1)">➡</button>
-        <button class="btn btn-ghost btn-sm" onclick="window._goToday()">Сегодня</button>
-      </div>
-      <button class="btn btn-primary" onclick="window._openLessonModal()">+ Урок</button>
-    </div>
-    <div class="schedule-grid">`;
-
-    for (let i = 0; i < 7; i++) {
-      const d = new Date(weekStart.getTime() + i * 86400000);
-      const dateStr = d.toISOString().split('T')[0];
-      const isToday = dateStr === todayISO();
-      const dayLessons = state.lessons.filter(l => l.date === dateStr).sort((a,b) => (a.timeStart||'') > (b.timeStart||'') ? 1 : -1);
-
-      html += `
-        <div class="schedule-day ${isToday ? 'today' : ''}" data-date="${dateStr}">
-          <div class="schedule-day-header">${days[i]}<span class="day-num">${d.getDate()}</span></div>
-          <div class="schedule-day-content">
-            ${dayLessons.map(l => {
-              const st = state.students.find(s => s.id === l.studentId);
-              return `<div class="schedule-event ${l.status === 'done' ? 'done' : ''}" data-id="${l.id}">
-                <div class="event-time">${formatTime(l.timeStart)} – ${formatTime(l.timeEnd)}</div>
-                <div class="event-name">${st ? st.name : l.groupName || 'Группа'}</div>
-                ${l.cabinet ? `<div class="event-room">📍 ${l.cabinet}</div>` : ''}
-                ${l.telemostLink ? `<div class="event-room">🔗 Telemost</div>` : ''}
-              </div>`;
-            }).join('')}
-            ${dayLessons.length === 0 ? `<div class="empty-slot" onclick="window._openLessonModal('${dateStr}')">+ Добавить</div>` : ''}
-          </div>
-        </div>`;
-    }
-    html += `</div>`;
-    container.innerHTML = html;
-  }
-
-  function renderTeachers() {
-    const tbody = $('#teachers-tbody');
-    if (!state.teachers.length) {
-      tbody.innerHTML = `<tr><td colspan="6" class="empty-state">Нет преподавателей</td></tr>`;
-      return;
-    }
-    tbody.innerHTML = state.teachers.map(t => `
-      <tr>
-        <td>${t.name}</td>
-        <td>${t.subjects || '—'}</td>
-        <td>${t.phone || '—'}</td>
-        <td>${t.email || '—'}</td>
-        <td>${t.role === 'admin' ? 'Админ' : 'Преподаватель'}</td>
-        <td>
-          <button class="btn btn-ghost btn-xs edit-tch-btn" data-id="${t.id}">✏️</button>
-          <button class="btn btn-ghost btn-xs del-tch-btn" data-id="${t.id}">🗑️</button>
-        </td>
-      </tr>
-    `).join('');
-  }
-
-  function renderGroups() {
-    const list = $('#groups-list');
-    const groups = [...new Set(state.students.map(s => s.group).filter(Boolean))];
-    if (!groups.length) {
-      list.innerHTML = `<div class="empty-state">Нет созданных групп</div>`;
-      return;
-    }
-    list.innerHTML = groups.map(g => {
-      const members = state.students.filter(s => s.group === g);
-      const total = members.reduce((sum, s) => sum + (s.rate || 0), 0);
-      return `<div class="card" style="padding:16px; margin-bottom:12px;">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div><strong>👥 ${g}</strong> <span style="color:var(--text3)">(${members.length} уч.)</span></div>
-          <div class="student-rate">Общая ставка: ${fmtMoney(total)}/урок</div>
-        </div>
-      </div>`;
-    }).join('');
-  }
-
-  function renderAttendance() {
-    const list = $('#attendance-list');
-    const date = $('#attendance-date-select')?.value || todayISO();
-    const lessons = state.lessons.filter(l => l.date === date && l.status === 'done');
-    
-    if (!lessons.length) {
-      list.innerHTML = `<div class="empty-state">Нет проведённых уроков на эту дату</div>`;
-      return;
-    }
-
-    list.innerHTML = lessons.map(l => {
-      const st = state.students.find(s => s.id === l.studentId);
-      const isPresent = l.attendanceStatus === 'present';
-      return `
-        <div class="attendance-item ${isPresent ? 'present' : ''}" onclick="window._toggleAttendance('${l.id}')">
-          <div class="attendance-checkbox">${isPresent ? '✓' : '○'}</div>
-          <div class="attendance-name">${st ? st.name : l.groupName || '—'}</div>
-          <div class="attendance-status-label">${isPresent ? 'Присутствовал' : 'Не отмечен'}</div>
-        </div>
-      `;
-    }).join('');
-  }
-
-  function renderFinance() {
-    const tbody = $('#payments-tbody');
-    let totalPaid = 0, totalDebt = 0;
-    
-    const rows = state.students.map(s => {
-      const doneLessons = state.lessons.filter(l => l.studentId === s.id && l.status === 'done').length;
-      const paid = state.payments.filter(p => p.studentId === s.id).reduce((sum, p) => sum + p.amount, 0);
-      const due = doneLessons * (s.rate || 0);
-      const debt = Math.max(0, due - paid);
-      
-      totalPaid += paid;
-      totalDebt += debt;
-
-      return `<tr>
-        <td>${s.name}</td>
-        <td>${s.type === 'group' ? 'Группа' : 'Индивид.'}</td>
-        <td>${doneLessons}</td>
-        <td>${fmtMoney(due)}</td>
-        <td style="color:var(--green)">${fmtMoney(paid)}</td>
-        <td style="color:${debt > 0 ? 'var(--red)' : 'var(--text3)'}">${debt > 0 ? fmtMoney(debt) : '—'}</td>
-        <td><span class="badge ${debt > 0 ? 'badge-red' : 'badge-green'}">${debt > 0 ? 'Долг' : 'ОК'}</span></td>
-        <td><button class="btn btn-primary btn-xs pay-btn" data-id="${s.id}">+ Оплата</button></td>
-      </tr>`;
+    // Считаем доход за неделю
+    const ws = getWeekStart(new Date());
+    const we = new Date(ws);
+    we.setDate(we.getDate() + 6);
+    const weekLessons = state.lessons.filter(l => {
+        return l.status === 'done' && l.date >= ws.toISOString().split('T')[0] && l.date <= we.toISOString().split('T')[0];
     });
+    const weekIncome = weekLessons.reduce((sum, l) => {
+        const student = state.students.find(s => s.id === l.studentId);
+        return sum + (student ? student.rate || 0 : 0);
+    }, 0);
+    
+    document.getElementById('stat-today-lessons').textContent = todayLessons;
+    document.getElementById('stat-students').textContent = activeStudents;
+    document.getElementById('stat-income').textContent = fmtMoney(weekIncome);
+    document.getElementById('stat-done').textContent = weekLessons.length;
+}
+    <script>
+// ================= УЧЕНИКИ =================
+function renderStudents() {
+    const grid = document.getElementById('students-grid');
+    
+    if (state.students.length === 0) {
+        grid.innerHTML = `
+            <div class="empty-state">
+                <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                </svg>
+                <h3>Нет учеников</h3>
+                <p>Добавьте первого ученика</p>
+            </div>
+        `;
+        return;
+    }
+    
+    grid.innerHTML = state.students.map(student => {
+        const lessonsCount = state.lessons.filter(l => l.studentId === student.id && l.status === 'done').length;
+        return `
+            <div class="student-card" onclick="openStudentModal('${student.id}')">
+                <div class="student-card-header">
+                    <div style="display:flex;gap:12px;align-items:flex-start">
+                        <div class="student-avatar">${student.name.charAt(0).toUpperCase()}</div>
+                        <div>
+                            <div class="student-name">${student.name}</div>
+                            <div class="student-subject">${student.subject || '—'}</div>
+                        </div>
+                    </div>
+                    <span class="badge ${student.status === 'active' ? 'badge-green' : 'badge-yellow'}">
+                        ${student.status === 'active' ? 'Активен' : 'Пауза'}
+                    </span>
+                </div>
+                
+                <div class="student-card-body">
+                    ${student.phone ? `<div class="student-info-row"> ${student.phone}</div>` : ''}
+                    ${student.group ? `<div class="student-info-row">👥 ${student.group}</div>` : ''}
+                    <div class="student-info-row"> Проведено: ${lessonsCount} уроков</div>
+                </div>
+                
+                <div class="student-footer">
+                    <div class="student-rate">${fmtMoney(student.rate)}/урок</div>
+                    <div class="student-actions">
+                        <button class="btn-icon" onclick="event.stopPropagation();editStudent('${student.id}')" title="Редактировать">✏️</button>
+                        <button class="btn-icon" onclick="event.stopPropagation();deleteStudent('${student.id}')" title="Удалить">️</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
 
-    $('#fin-paid').textContent = fmtMoney(totalPaid);
-    $('#fin-expected').textContent = fmtMoney(totalDebt + totalPaid);
-    $('#fin-debt').textContent = fmtMoney(totalDebt);
-    $('#fin-lessons').textContent = state.lessons.filter(l => l.status === 'done').length;
+function openStudentModal(studentId = null) {
+    const modal = document.getElementById('modal-student');
+    const title = document.getElementById('student-modal-title');
+    
+    if (studentId) {
+        const student = state.students.find(s => s.id === studentId);
+        if (!student) return;
+        
+        title.textContent = 'Редактировать ученика';
+        document.getElementById('student-name').value = student.name || '';
+        document.getElementById('student-subject').value = student.subject || '';
+        document.getElementById('student-type').value = student.type || 'individual';
+        document.getElementById('student-rate').value = student.rate || '';
+        document.getElementById('student-phone').value = student.phone || '';
+        document.getElementById('student-email').value = student.email || '';
+        document.getElementById('student-notes').value = student.notes || '';
+    } else {
+        title.textContent = 'Новый ученик';
+        document.getElementById('student-name').value = '';
+        document.getElementById('student-subject').value = '';
+        document.getElementById('student-type').value = 'individual';
+        document.getElementById('student-rate').value = '';
+        document.getElementById('student-phone').value = '';
+        document.getElementById('student-email').value = '';
+        document.getElementById('student-notes').value = '';
+    }
+    
+    modal.classList.add('open');
+}
 
-    tbody.innerHTML = rows.length ? rows.join('') : `<tr><td colspan="8" class="empty-state">Нет данных</td></tr>`;
-  }
-
-  function renderReports() {
-    $('#report-result').innerHTML = `
-      <div class="card" style="padding:20px; text-align:center;">
-        <div style="font-size:40px; margin-bottom:10px;">📊</div>
-        <h3>Генерация отчётов</h3>
-        <p>Выберите параметры и нажмите "Сформировать"</p>
-      </div>
-    `;
-  }
-
-  function renderSettings() {
-    $('#setting-name').value = state.settings.name || '';
-    $('#setting-currency').value = state.settings.currency;
-  }
-
-  // ================= MODALS & ACTIONS =================
-  function openModal(id) { $(id)?.classList.add('open'); }
-  function closeModal(id) { $(id)?.classList.remove('open'); }
-
-  window._openStudentModal = (id = null) => {
-    const s = id ? state.students.find(x => x.id === id) : null;
-    $('#modal-student-title').textContent = s ? 'Редактировать ученика' : 'Новый ученик';
-    $('#s-name').value = s?.name || '';
-    $('#s-subject').value = s?.subject || '';
-    $('#s-type').value = s?.type || 'individual';
-    $('#s-status').value = s?.status || 'active';
-    $('#s-group').value = s?.group || '';
-    $('#s-rate').value = s?.rate || '';
-    $('#s-payment-type').value = s?.paymentType || 'hourly';
-    $('#s-phone').value = s?.phone || '';
-    $('#s-notes').value = s?.notes || '';
-    openModal('#modal-student');
-    $('#btn-save-student').onclick = () => {
-      if (!$('#s-name').value.trim()) return toast('Введите имя', 'error');
-      const data = {
-        id: s?.id || uid(),
-        name: $('#s-name').value.trim(),
-        subject: $('#s-subject').value.trim(),
-        type: $('#s-type').value,
-        status: $('#s-status').value,
-        group: $('#s-group').value.trim(),
-        rate: parseFloat($('#s-rate').value) || 0,
-        paymentType: $('#s-payment-type').value,
-        phone: $('#s-phone').value.trim(),
-        notes: $('#s-notes').value.trim()
-      };
-      if (s) {
-        const idx = state.students.findIndex(x => x.id === s.id);
-        state.students[idx] = data;
-      } else {
-        state.students.push(data);
-      }
-      save(); closeModal('#modal-student'); render('students'); toast('Сохранено');
+function saveStudent() {
+    const name = document.getElementById('student-name').value.trim();
+    if (!name) {
+        showToast('Введите имя ученика', 'error');
+        return;
+    }
+    
+    const studentId = document.getElementById('student-modal-title').textContent.includes('Редактировать') 
+        ? state.students.find(s => s.name === name)?.id 
+        : null;
+    
+    const studentData = {
+        id: studentId || uid(),
+        name: name,
+        subject: document.getElementById('student-subject').value.trim(),
+        type: document.getElementById('student-type').value,
+        rate: parseFloat(document.getElementById('student-rate').value) || 0,
+        phone: document.getElementById('student-phone').value.trim(),
+        email: document.getElementById('student-email').value.trim(),
+        notes: document.getElementById('student-notes').value.trim(),
+        status: 'active',
+        createdAt: studentId ? (state.students.find(s => s.id === studentId)?.createdAt || todayISO()) : todayISO()
     };
-  };
+    
+    if (studentId) {
+        const idx = state.students.findIndex(s => s.id === studentId);
+        if (idx !== -1) state.students[idx] = studentData;
+    } else {
+        state.students.push(studentData);
+    }
+    
+    saveState();
+    closeModal('modal-student');
+    renderStudents();
+    showToast(studentId ? 'Ученик обновлен' : 'Ученик добавлен');
+}
 
-  window._openLessonModal = (date = todayISO()) => {
-    $('#modal-lesson-title').textContent = 'Новый урок';
-    $('#l-student').innerHTML = state.students.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
-    $('#l-date').value = date;
-    $('#l-time-start').value = '10:00';
-    $('#l-time-end').value = '11:00';
-    $('#l-cabinet').value = '';
-    $('#l-telemost').value = '';
-    $('#l-goal').value = '';
-    openModal('#modal-lesson');
-    $('#btn-save-lesson').onclick = () => {
-      const stId = $('#l-student').value;
-      if (!stId) return toast('Выберите ученика', 'error');
-      const lesson = {
-        id: uid(),
-        studentId: stId,
-        date: $('#l-date').value,
-        timeStart: $('#l-time-start').value,
-        timeEnd: $('#l-time-end').value,
-        cabinet: $('#l-cabinet').value.trim(),
-        telemostLink: $('#l-telemost').value.trim(),
-        goal: $('#l-goal').value.trim(),
+function deleteStudent(studentId) {
+    if (confirm('Удалить ученика? Все связанные уроки останутся.')) {
+        state.students = state.students.filter(s => s.id !== studentId);
+        saveState();
+        renderStudents();
+        showToast('Ученик удален');
+    }
+}
+
+function editStudent(studentId) {
+    openStudentModal(studentId);
+}
+    <script>
+// ================= МОДАЛЬНЫЕ ОКНА =================
+function openModal(id) {
+    document.getElementById(id).classList.add('open');
+}
+
+function closeModal(id) {
+    document.getElementById(id).classList.remove('open');
+}
+
+// Закрытие по клику на оверлей
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+            overlay.classList.remove('open');
+        }
+    });
+});
+
+// ================= УРОКИ =================
+function openLessonModal(date = todayISO(), lessonId = null) {
+    const modal = document.getElementById('modal-lesson');
+    const title = document.getElementById('lesson-modal-title');
+    
+    // Заполняем список учеников
+    const select = document.getElementById('lesson-student');
+    select.innerHTML = '<option value="">Выберите ученика</option>' + 
+        state.students.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+    
+    if (lessonId) {
+        const lesson = state.lessons.find(l => l.id === lessonId);
+        if (!lesson) return;
+        
+        title.textContent = 'Редактировать урок';
+        document.getElementById('lesson-student').value = lesson.studentId || '';
+        document.getElementById('lesson-date').value = lesson.date || date;
+        document.getElementById('lesson-start').value = lesson.timeStart || '10:00';
+        document.getElementById('lesson-end').value = lesson.timeEnd || '11:00';
+        document.getElementById('lesson-room').value = lesson.room || '';
+        document.getElementById('lesson-telemost').value = lesson.telemostLink || '';
+        document.getElementById('lesson-notes').value = lesson.notes || '';
+    } else {
+        title.textContent = 'Новый урок';
+        document.getElementById('lesson-student').value = '';
+        document.getElementById('lesson-date').value = date;
+        document.getElementById('lesson-start').value = '10:00';
+        document.getElementById('lesson-end').value = '11:00';
+        document.getElementById('lesson-room').value = '';
+        document.getElementById('lesson-telemost').value = '';
+        document.getElementById('lesson-notes').value = '';
+    }
+    
+    modal.classList.add('open');
+}
+
+function saveLesson() {
+    const studentId = document.getElementById('lesson-student').value;
+    if (!studentId) {
+        showToast('Выберите ученика', 'error');
+        return;
+    }
+    
+    const date = document.getElementById('lesson-date').value;
+    if (!date) {
+        showToast('Укажите дату', 'error');
+        return;
+    }
+    
+    const lessonId = document.getElementById('lesson-modal-title').textContent.includes('Редактировать')
+        ? state.lessons.find(l => l.date === date && l.timeStart === document.getElementById('lesson-start').value)?.id
+        : null;
+    
+    const lessonData = {
+        id: lessonId || uid(),
+        studentId: studentId,
+        date: date,
+        timeStart: document.getElementById('lesson-start').value,
+        timeEnd: document.getElementById('lesson-end').value,
+        room: document.getElementById('lesson-room').value.trim(),
+        telemostLink: document.getElementById('lesson-telemost').value.trim(),
+        notes: document.getElementById('lesson-notes').value.trim(),
         status: 'planned',
-        attendanceStatus: 'none'
-      };
-      state.lessons.push(lesson);
-      save(); closeModal('#modal-lesson'); render('schedule'); toast('Урок добавлен');
+        createdAt: lessonId ? (state.lessons.find(l => l.id === lessonId)?.createdAt || todayISO()) : todayISO()
     };
-  };
-
-  window._openTeacherModal = () => {
-    $('#modal-teacher').querySelector('.modal-title').textContent = 'Новый преподаватель';
-    $('#t-name').value = '';
-    $('#t-subjects').value = '';
-    $('#t-phone').value = '';
-    $('#t-email').value = '';
-    $('#t-role').value = 'teacher';
-    openModal('#modal-teacher');
-    $('#btn-save-teacher').onclick = () => {
-      if (!$('#t-name').value.trim()) return toast('Введите ФИО', 'error');
-      state.teachers.push({
-        id: uid(),
-        name: $('#t-name').value.trim(),
-        subjects: $('#t-subjects').value.trim(),
-        phone: $('#t-phone').value.trim(),
-        email: $('#t-email').value.trim(),
-        role: $('#t-role').value
-      });
-      save(); closeModal('#modal-teacher'); render('teachers'); toast('Сохранено');
-    };
-  };
-
-  window._openPaymentModal = (studentId) => {
-    const s = state.students.find(x => x.id === studentId);
-    if (!s) return;
-    $('#pay-student-name').textContent = s.name;
-    $('#pay-amount').value = s.rate || '';
-    $('#pay-date').value = todayISO();
-    $('#pay-note').value = '';
-    openModal('#modal-payment');
-    $('#btn-save-payment').onclick = () => {
-      const amount = parseFloat($('#pay-amount').value);
-      if (!amount || amount <= 0) return toast('Введите сумму', 'error');
-      state.payments.push({
-        id: uid(),
-        studentId: s.id,
-        amount,
-        date: $('#pay-date').value,
-        note: $('#pay-note').value.trim()
-      });
-      save(); closeModal('#modal-payment'); render('finance'); toast('Оплата записана');
-    };
-  };
-
-  window._toggleAttendance = (lessonId) => {
-    const l = state.lessons.find(x => x.id === lessonId);
-    if (!l) return;
-    l.attendanceStatus = l.attendanceStatus === 'present' ? 'none' : 'present';
-    if (l.attendanceStatus === 'present') l.status = 'done';
-    save(); render('attendance');
-  };
-
-  window._shiftWeek = (dir) => {
-    const el = $('#week-label');
-    // Simplified week shift for MVP
-    toast(`Неделя сдвинута (демо)`, 'info');
-  };
-  window._goToday = () => render('schedule');
-
-  // ================= EVENTS & INIT =================
-  function init() {
-    load();
     
-    // Navigation
-    $$('.nav-item').forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
+    if (lessonId) {
+        const idx = state.lessons.findIndex(l => l.id === lessonId);
+        if (idx !== -1) state.lessons[idx] = lessonData;
+    } else {
+        state.lessons.push(lessonData);
+    }
     
-    // Modals
-    $$('.modal-close, [data-close]').forEach(btn => btn.addEventListener('click', () => closeModal(btn.dataset.close)));
-    $$('.modal-overlay').forEach(ov => ov.addEventListener('click', e => e.target === ov && closeModal(ov.id)));
+    saveState();
+    closeModal('modal-lesson');
+    renderSchedule();
+    showToast(lessonId ? 'Урок обновлен' : 'Урок добавлен');
+}
+
+// Навигация по неделям
+function changeWeek(direction) {
+    scheduleDate.setDate(scheduleDate.getDate() + (direction * 7));
+    renderSchedule();
+}
+
+function goToday() {
+    scheduleDate = new Date();
+    renderSchedule();
+}
+
+// Отметить урок как проведенный
+function markLessonDone(lessonId) {
+    const lesson = state.lessons.find(l => l.id === lessonId);
+    if (lesson) {
+        lesson.status = 'done';
+        saveState();
+        renderSchedule();
+        showToast('Урок отмечен как проведенный');
+    }
+}
+    <script>
+// ================= ИНИЦИАЛИЗАЦИЯ =================
+document.addEventListener('DOMContentLoaded', () => {
+    loadState();
     
-    // Top buttons
-    $('#btn-add-student')?.addEventListener('click', () => window._openStudentModal());
-    $('#btn-add-lesson')?.addEventListener('click', () => window._openLessonModal());
-    $('#btn-add-teacher')?.addEventListener('click', () => window._openTeacherModal());
+    // Устанавливаем текущую дату в сайдбаре
+    const now = new Date();
+    const months = ['Января', 'Февраля', 'Марта', 'Апреля', 'Мая', 'Июня', 'Июля', 'Августа', 'Сентября', 'Октября', 'Ноября', 'Декабря'];
+    document.getElementById('current-date').textContent = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
     
-    // Dynamic delegation
-    document.addEventListener('click', e => {
-      if (e.target.closest('.edit-btn')) window._openStudentModal(e.target.closest('.edit-btn').dataset.id);
-      if (e.target.closest('.del-btn')) {
-        if (confirm('Удалить ученика?')) {
-          state.students = state.students.filter(s => s.id !== e.target.closest('.del-btn').dataset.id);
-          save(); render('students'); toast('Удалено');
-        }
-      }
-      if (e.target.closest('.pay-btn')) window._openPaymentModal(e.target.closest('.pay-btn').dataset.id);
-      if (e.target.closest('.edit-tch-btn')) { toast('Редактирование (демо)', 'info'); }
-      if (e.target.closest('.del-tch-btn')) {
-        if (confirm('Удалить преподавателя?')) {
-          state.teachers = state.teachers.filter(t => t.id !== e.target.closest('.del-tch-btn').dataset.id);
-          save(); render('teachers'); toast('Удалено');
-        }
-      }
+    // Навигация
+    document.querySelectorAll('.nav-item').forEach(btn => {
+        btn.addEventListener('click', () => {
+            switchView(btn.dataset.page);
+        });
     });
-
-    // Settings inputs
-    $('#setting-name')?.addEventListener('input', e => { state.settings.name = e.target.value; save(); });
-    $('#setting-currency')?.addEventListener('change', e => { state.settings.currency = e.target.value; save(); render('students'); render('finance'); });
-
-    // Export/Import
-    $('#btn-export')?.addEventListener('click', () => {
-      const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href = url; a.download = `mudro-backup-${todayISO()}.json`;
-      a.click(); URL.revokeObjectURL(url); toast('Данные экспортированы');
+    
+    // Кнопки добавления
+    document.getElementById('btn-add').addEventListener('click', () => {
+        const currentView = state.settings.currentView;
+        if (currentView === 'schedule') openLessonModal();
+        else if (currentView === 'students') openStudentModal();
+        else if (currentView === 'teachers') openTeacherModal();
     });
-
-    $('#btn-import')?.addEventListener('click', () => $('#import-file').click());
-    $('#import-file')?.addEventListener('change', e => {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = ev => {
-        try {
-          const data = JSON.parse(ev.target.result);
-          Object.assign(state, data);
-          save(); switchTab('dashboard'); toast('Данные импортированы');
-        } catch (err) { toast('Ошибка формата файла', 'error'); }
-      };
-      reader.readAsText(file);
+    
+    // Сохранение ученика
+    document.getElementById('btn-save-student').addEventListener('click', saveStudent);
+    
+    // Сохранение урока
+    document.getElementById('btn-save-lesson').addEventListener('click', saveLesson);
+    
+    // Закрытие модалок
+    document.querySelectorAll('[data-close]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            closeModal(btn.dataset.close);
+        });
     });
+    
+    // Навигация расписания
+    document.getElementById('sch-prev').addEventListener('click', () => changeWeek(-1));
+    document.getElementById('sch-next').addEventListener('click', () => changeWeek(1));
+    document.getElementById('sch-today').addEventListener('click', goToday);
+    
+    // Первый рендер
+    switchView('schedule');
+});
 
-    $('#btn-reset')?.addEventListener('click', () => {
-      if (confirm('Сбросить все данные? Это действие необратимо.')) {
-        localStorage.removeItem(STORAGE_KEY);
-        location.reload();
-      }
-    });
+// Заглушки для будущих функций
+function renderTeachers() {
+    const tbody = document.getElementById('teachers-tbody');
+    if (state.teachers.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="empty-state">Нет преподавателей</td></tr>';
+    } else {
+        tbody.innerHTML = state.teachers.map(t => `
+            <tr>
+                <td>${t.name}</td>
+                <td>${t.subjects || '—'}</td>
+                <td>${t.phone || '—'}</td>
+                <td>${t.email || '—'}</td>
+                <td>${t.role || 'Преподаватель'}</td>
+                <td>
+                    <button class="btn btn-ghost btn-xs">✏️</button>
+                    <button class="btn btn-ghost btn-xs">🗑️</button>
+                </td>
+            </tr>
+        `).join('');
+    }
+}
 
-    switchTab('dashboard');
-  }
+function renderFinance() {
+    const tbody = document.getElementById('payments-tbody');
+    tbody.innerHTML = '<tr><td colspan="5" class="empty-state">Раздел в разработке</td></tr>';
+}
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
-  else init();
-})();
+function renderAttendance() {
+    const list = document.getElementById('attendance-list');
+    list.innerHTML = '<div class="empty-state">Раздел в разработке</div>';
+}
+
+function openTeacherModal() {
+    showToast('Функция добавления преподавателей в разработке', 'info');
+}
 </script>
+    
 </body>
 </html>
