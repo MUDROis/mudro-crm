@@ -1075,6 +1075,101 @@ function renderAttendance() {
 function openTeacherModal() {
     showToast('Функция добавления преподавателей в разработке', 'info');
 }
+// ================= НАСТРОЙКИ API =================
+const API_URL = 'http://localhost:3000'; // Адрес вашего сервера в Docker
+
+// --- ЗАМЕНА ДЛЯ УЧЕНИКОВ ---
+
+// Вместо чтения из localStorage мы читаем с сервера
+async function loadStudentsFromAPI() {
+    try {
+        const response = await fetch(`${API_URL}/api/students`);
+        if (!response.ok) throw new Error('Ошибка сети');
+        const students = await response.json();
+        
+        // Обновляем наш глобальный state и перерисовываем экран
+        state.students = students;
+        renderStudents();
+        console.log("Ученики загружены с сервера:", students);
+    } catch (e) {
+        console.error("Не удалось загрузить учеников:", e);
+        toast("Ошибка подключения к серверу", "error");
+    }
+}
+
+// Вместо сохранения в localStorage мы отправляем POST запрос
+async function saveStudentToAPI(studentData) {
+    try {
+        const response = await fetch(`${API_URL}/api/students`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(studentData)
+        });
+        
+        if (!response.ok) throw new Error('Ошибка сохранения');
+        const newStudent = await response.json();
+        
+        // Обновляем список на экране
+        state.students.push(newStudent);
+        renderStudents();
+        toast("Ученик успешно добавлен в базу");
+        closeModal('#modal-student');
+    } catch (e) {
+        console.error("Ошибка при сохранении:", e);
+        toast("Ошибка сервера", "error");
+    }
+}
+
+// --- ЗАМЕНА ДЛЯ РАСПИСАНИЯ ---
+
+async function loadScheduleFromAPI() {
+    try {
+        const response = await fetch(`${API_URL}/api/schedule`);
+        if (!response.ok) throw new Error('Ошибка сети');
+        const lessons = await response.json();
+        
+        state.lessons = lessons;
+        renderSchedule(); // Перерисовка календаря
+    } catch (e) {
+        console.error("Не удалось загрузить расписание:", e);
+    }
+}
+
+async function saveLessonToAPI(lessonData) {
+    try {
+        const response = await fetch(`${API_URL}/api/schedule`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(lessonData)
+        });
+        
+        if (!response.ok) throw new Error('Ошибка сохранения');
+        const newLesson = await response.json();
+        
+        state.lessons.push(newLesson);
+        renderSchedule();
+        toast("Урок добавлен в расписание");
+        closeModal('#modal-lesson');
+    } catch (e) {
+        console.error("Ошибка:", e);
+        toast("Ошибка сервера", "error");
+    }
+}
+
+// ================= ИНИЦИАЛИЗАЦИЯ ПРИ ЗАГРУЗКЕ =================
+
+// Мы меняем функцию init() из Части 2, чтобы она грузила данные с сервера,
+// а не из localStorage.
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Загружаем данные сразу при старте страницы
+    loadStudentsFromAPI();
+    loadScheduleFromAPI();
+    
+    // ... здесь весь остальной код обработчиков кнопок (click events) из Части 2 ...
+    // ВАЖНО: В обработчиках кнопок (например, "Сохранить ученика") 
+    // вместо вызова saveState() теперь вызываем saveStudentToAPI()
+});
 </script>
     
 </body>
