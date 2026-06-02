@@ -24,12 +24,16 @@
             --text3: #7A8FA8;         /* Серый текст */
             
             /* Статусы */
+            --blue: #2C5A8D;
+            --blue-light: #E8F0F8;
             --green: #2D7A4F;
             --green-light: #E8F5E9;
             --red: #C62828;
             --red-light: #FFEBEE;
             --yellow: #C9A227;
             --yellow-light: #FFF9E6;
+            --gray: #6B7280;
+            --gray-light: #F3F4F6;
             
             /* Размеры */
             --sidebar-width: 260px;
@@ -187,10 +191,11 @@
             padding: 4px 10px; border-radius: 20px;
             font-size: 11px; font-weight: 700;
         }
-        .badge-blue { background: var(--primary-light); color: var(--primary); }
+        .badge-blue { background: var(--blue-light); color: var(--blue); }
         .badge-green { background: var(--green-light); color: var(--green); }
         .badge-red { background: var(--red-light); color: var(--red); }
         .badge-yellow { background: var(--yellow-light); color: var(--yellow); }
+        .badge-gray { background: var(--gray-light); color: var(--gray); }
 
         /* === ФОРМЫ И МОДАЛКИ === */
         .form-group { margin-bottom: 16px; }
@@ -270,16 +275,30 @@
         .schedule-day-content { padding: 8px; }
         
         .schedule-event {
-            background: var(--primary-light); border-left: 3px solid var(--primary);
+            border-left: 3px solid var(--primary);
             border-radius: 6px; padding: 6px 8px; margin-bottom: 4px;
             font-size: 12px; cursor: pointer; transition: transform 0.1s ease;
+            background: var(--blue-light);
         }
         .schedule-event:hover { transform: translateX(2px); }
         .schedule-event .event-time { font-weight: 700; color: var(--primary); }
         .schedule-event .event-name { font-weight: 600; margin-top: 2px; }
         .schedule-event .event-room { color: var(--text3); font-size: 11px; }
-        .schedule-event.done { background: var(--green-light); border-color: var(--green); }
-        .schedule-event.done .event-time { color: var(--green); }
+        
+        /* Статусы событий в расписании */
+        .schedule-event.status-done { background: var(--green-light); border-color: var(--green); }
+        .schedule-event.status-done .event-time { color: var(--green); }
+        
+        .schedule-event.status-planned { background: var(--blue-light); border-color: var(--blue); }
+        .schedule-event.status-planned .event-time { color: var(--blue); }
+        
+        .schedule-event.status-rescheduled { background: var(--yellow-light); border-color: var(--yellow); }
+        .schedule-event.status-rescheduled .event-time { color: var(--yellow); }
+        
+        .schedule-event.status-canceled { background: var(--gray-light); border-color: var(--gray); }
+        .schedule-event.status-canceled .event-time { color: var(--gray); }
+        .schedule-event.status-canceled .event-name,
+        .schedule-event.status-canceled .event-room { text-decoration: line-through; }
 
         .empty-slot {
             padding: 20px 8px; text-align: center; color: var(--text3);
@@ -348,6 +367,30 @@
         @keyframes slideIn {
             from { transform: translateX(400px); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* === SELECT STYLES === */
+        .status-radio-group {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
+            margin-bottom: 16px;
+        }
+        .status-radio {
+            display: flex; align-items: center; gap: 8px;
+            padding: 10px 12px; border: 2px solid var(--border);
+            border-radius: var(--radius-sm); cursor: pointer;
+            transition: all 0.15s ease;
+            background: var(--bg);
+        }
+        .status-radio input[type="radio"] {
+            cursor: pointer; width: 16px; height: 16px;
+        }
+        .status-radio input[type="radio"]:checked ~ label,
+        .status-radio:has(input[type="radio"]:checked) {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+        .status-radio label {
+            flex: 1; cursor: pointer; margin: 0; font-weight: 600;
         }
 
         /* Адаптив для мобильных */
@@ -603,6 +646,27 @@
                 <div class="form-group">
                     <label class="form-label">Конец</label>
                     <input type="time" class="form-control" id="lesson-end" value="11:00">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Статус урока</label>
+                <div class="status-radio-group">
+                    <label class="status-radio">
+                        <input type="radio" name="lesson-status" value="planned" checked>
+                        <span>🔵 Запланирован</span>
+                    </label>
+                    <label class="status-radio">
+                        <input type="radio" name="lesson-status" value="done">
+                        <span>🟢 Проведен</span>
+                    </label>
+                    <label class="status-radio">
+                        <input type="radio" name="lesson-status" value="rescheduled">
+                        <span>🟡 Перенос</span>
+                    </label>
+                    <label class="status-radio">
+                        <input type="radio" name="lesson-status" value="canceled">
+                        <span>⚫ Отмена</span>
+                    </label>
                 </div>
             </div>
             <div class="form-group">
@@ -886,7 +950,8 @@ function renderSchedule() {
             </div>
         ` : dayLessons.map(lesson => {
             const student = state.students.find(s => s.id === lesson.studentId);
-            const statusClass = lesson.status === 'done' ? 'done' : '';
+            const status = lesson.status || 'planned';
+            const statusClass = `status-${status}`;
             return `
                 <div class="schedule-event ${statusClass}" onclick="openLessonModal('${iso}', '${lesson.id}')">
                     <div class="event-time">${lesson.timeStart || ''} – ${lesson.timeEnd || ''}</div>
@@ -923,9 +988,12 @@ function updateStats() {
     const we = new Date(ws);
     we.setDate(we.getDate() + 6);
     const weekLessons = state.lessons.filter(l => {
+        return (l.status === 'done' || l.status === 'planned' || !l.status) && l.date >= ws.toISOString().split('T')[0] && l.date <= we.toISOString().split('T')[0];
+    });
+    const doneWeekLessons = state.lessons.filter(l => {
         return l.status === 'done' && l.date >= ws.toISOString().split('T')[0] && l.date <= we.toISOString().split('T')[0];
     });
-    const weekIncome = weekLessons.reduce((sum, l) => {
+    const weekIncome = doneWeekLessons.reduce((sum, l) => {
         const student = state.students.find(s => s.id === l.studentId);
         return sum + (student ? student.rate || 0 : 0);
     }, 0);
@@ -933,7 +1001,7 @@ function updateStats() {
     document.getElementById('stat-today-lessons').textContent = todayLessons;
     document.getElementById('stat-students').textContent = activeStudents;
     document.getElementById('stat-income').textContent = fmtMoney(weekIncome);
-    document.getElementById('stat-done').textContent = weekLessons.length;
+    document.getElementById('stat-done').textContent = doneWeekLessons.length;
 }
 
 function changeWeek(direction) {
@@ -968,6 +1036,7 @@ function openLessonModal(date = todayISO(), lessonId = null) {
         document.getElementById('lesson-room').value = lesson.room || '';
         document.getElementById('lesson-telemost').value = lesson.telemostLink || '';
         document.getElementById('lesson-notes').value = lesson.notes || '';
+        document.querySelector(`input[name="lesson-status"][value="${lesson.status || 'planned'}"]`).checked = true;
     } else {
         currentEditingId = null;
         title.textContent = 'Новый урок';
@@ -978,6 +1047,7 @@ function openLessonModal(date = todayISO(), lessonId = null) {
         document.getElementById('lesson-room').value = '';
         document.getElementById('lesson-telemost').value = '';
         document.getElementById('lesson-notes').value = '';
+        document.querySelector('input[name="lesson-status"][value="planned"]').checked = true;
     }
     
     modal.classList.add('open');
@@ -996,85 +1066,34 @@ function saveLesson() {
         return;
     }
     
+    const status = document.querySelector('input[name="lesson-status"]:checked').value;
+    
     const lessonData = {
         id: currentEditingId || uid(),
-        studentId: studentId,
-        date: date,
+        studentId,
+        date,
         timeStart: document.getElementById('lesson-start').value,
         timeEnd: document.getElementById('lesson-end').value,
-        room: document.getElementById('lesson-room').value.trim(),
-        telemostLink: document.getElementById('lesson-telemost').value.trim(),
-        notes: document.getElementById('lesson-notes').value.trim(),
-        status: 'planned',
-        createdAt: currentEditingId ? (state.lessons.find(l => l.id === currentEditingId)?.createdAt || todayISO()) : todayISO()
+        room: document.getElementById('lesson-room').value,
+        telemostLink: document.getElementById('lesson-telemost').value,
+        notes: document.getElementById('lesson-notes').value,
+        status: status
     };
     
-    if (currentEditingId) {
-        const idx = state.lessons.findIndex(l => l.id === currentEditingId);
-        if (idx !== -1) state.lessons[idx] = lessonData;
+    const idx = state.lessons.findIndex(l => l.id === currentEditingId);
+    if (idx >= 0) {
+        state.lessons[idx] = lessonData;
     } else {
         state.lessons.push(lessonData);
     }
     
     saveState();
-    closeModal('modal-lesson');
     renderSchedule();
+    closeModal('modal-lesson');
     showToast(currentEditingId ? 'Урок обновлен' : 'Урок добавлен');
 }
 
 // ================= УЧЕНИКИ =================
-function renderStudents() {
-    const grid = document.getElementById('students-grid');
-    
-    if (state.students.length === 0) {
-        grid.innerHTML = `
-            <div class="empty-state">
-                <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                    <circle cx="9" cy="7" r="4"/>
-                </svg>
-                <h3>Нет учеников</h3>
-                <p>Добавьте первого ученика</p>
-            </div>
-        `;
-        return;
-    }
-    
-    grid.innerHTML = state.students.map(student => {
-        const lessonsCount = state.lessons.filter(l => l.studentId === student.id && l.status === 'done').length;
-        return `
-            <div class="student-card">
-                <div class="student-card-header">
-                    <div style="display:flex;gap:12px;align-items:flex-start;flex:1;">
-                        <div class="student-avatar">${student.name.charAt(0).toUpperCase()}</div>
-                        <div style="flex:1;">
-                            <div class="student-name">${student.name}</div>
-                            <div class="student-subject">${student.subject || '—'}</div>
-                        </div>
-                    </div>
-                    <span class="badge ${student.status === 'active' ? 'badge-green' : 'badge-yellow'}">
-                        ${student.status === 'active' ? 'Активен' : 'Пауза'}
-                    </span>
-                </div>
-                
-                <div class="student-card-body">
-                    ${student.phone ? `<div class="student-info-row">📱 ${student.phone}</div>` : ''}
-                    ${student.group ? `<div class="student-info-row">👥 ${student.group}</div>` : ''}
-                    <div class="student-info-row">📚 Проведено: ${lessonsCount} уроков</div>
-                </div>
-                
-                <div class="student-footer">
-                    <div class="student-rate">${fmtMoney(student.rate)}/урок</div>
-                    <div class="student-actions">
-                        <button class="btn-icon" onclick="editStudent('${student.id}')" title="Редактировать">✏️</button>
-                        <button class="btn-icon" onclick="deleteStudent('${student.id}')" title="Удалить">🗑️</button>
-                    </div>
-                </div>
-            </div>
-        `;
-    }).join('');
-}
-
 function openStudentModal(studentId = null) {
     const modal = document.getElementById('modal-student');
     const title = document.getElementById('student-modal-title');
@@ -1087,8 +1106,8 @@ function openStudentModal(studentId = null) {
         title.textContent = 'Редактировать ученика';
         document.getElementById('student-name').value = student.name || '';
         document.getElementById('student-subject').value = student.subject || '';
-        document.getElementById('student-rate').value = student.rate || '';
         document.getElementById('student-phone').value = student.phone || '';
+        document.getElementById('student-rate').value = student.rate || '';
         document.getElementById('student-group').value = student.group || '';
         document.getElementById('student-notes').value = student.notes || '';
     } else {
@@ -1096,8 +1115,8 @@ function openStudentModal(studentId = null) {
         title.textContent = 'Новый ученик';
         document.getElementById('student-name').value = '';
         document.getElementById('student-subject').value = '';
-        document.getElementById('student-rate').value = '';
         document.getElementById('student-phone').value = '';
+        document.getElementById('student-rate').value = '';
         document.getElementById('student-group').value = '';
         document.getElementById('student-notes').value = '';
     }
@@ -1108,37 +1127,71 @@ function openStudentModal(studentId = null) {
 function saveStudent() {
     const name = document.getElementById('student-name').value.trim();
     if (!name) {
-        showToast('Введите имя ученика', 'error');
+        showToast('Введите ФИО', 'error');
         return;
     }
     
     const studentData = {
         id: currentEditingId || uid(),
-        name: name,
-        subject: document.getElementById('student-subject').value.trim(),
+        name,
+        subject: document.getElementById('student-subject').value,
+        phone: document.getElementById('student-phone').value,
         rate: parseFloat(document.getElementById('student-rate').value) || 0,
-        phone: document.getElementById('student-phone').value.trim(),
-        group: document.getElementById('student-group').value.trim(),
-        notes: document.getElementById('student-notes').value.trim(),
-        status: 'active',
-        createdAt: currentEditingId ? (state.students.find(s => s.id === currentEditingId)?.createdAt || todayISO()) : todayISO()
+        group: document.getElementById('student-group').value,
+        notes: document.getElementById('student-notes').value,
+        status: 'active'
     };
     
-    if (currentEditingId) {
-        const idx = state.students.findIndex(s => s.id === currentEditingId);
-        if (idx !== -1) state.students[idx] = studentData;
+    const idx = state.students.findIndex(s => s.id === currentEditingId);
+    if (idx >= 0) {
+        state.students[idx] = studentData;
     } else {
         state.students.push(studentData);
     }
     
     saveState();
-    closeModal('modal-student');
     renderStudents();
+    closeModal('modal-student');
     showToast(currentEditingId ? 'Ученик обновлен' : 'Ученик добавлен');
 }
 
+function renderStudents() {
+    const container = document.getElementById('students-grid');
+    
+    if (state.students.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state" style="grid-column: 1/-1;">
+                <h3>Нет учеников</h3>
+                <p>Добавьте первого ученика кнопкой выше</p>
+            </div>
+        `;
+        return;
+    }
+    
+    container.innerHTML = state.students.map(student => `
+        <div class="student-card">
+            <div class="student-card-header">
+                <div>
+                    <div class="student-name">${student.name}</div>
+                    <div class="student-subject">${student.subject || 'Предмет не указан'}</div>
+                </div>
+                <div class="student-avatar">${student.name.charAt(0)}</div>
+            </div>
+            <div class="student-card-body">
+                <div class="student-info-row">📱 ${student.phone || '—'}</div>
+                <div class="student-info-row">💰 ${student.rate} ₽/час</div>
+                <div class="student-info-row">👥 ${student.group || '—'}</div>
+            </div>
+            <div class="student-footer">
+                <button class="btn btn-sm btn-ghost" onclick="openStudentModal('${student.id}')">Изменить</button>
+                <button class="btn btn-sm btn-ghost" onclick="deleteStudent('${student.id}')">Удалить</button>
+            </div>
+        </div>
+    `).join('');
+}
+
 function deleteStudent(studentId) {
-    if (confirm('Удалить ученика? Все связанные уроки останутся.')) {
+    if (confirm('Вы уверены?')) {
         state.students = state.students.filter(s => s.id !== studentId);
         saveState();
         renderStudents();
@@ -1146,33 +1199,7 @@ function deleteStudent(studentId) {
     }
 }
 
-function editStudent(studentId) {
-    openStudentModal(studentId);
-}
-
 // ================= ПРЕПОДАВАТЕЛИ =================
-function renderTeachers() {
-    const tbody = document.getElementById('teachers-tbody');
-    
-    if (state.teachers.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--text3);">Нет преподавателей</td></tr>';
-        return;
-    }
-    
-    tbody.innerHTML = state.teachers.map(teacher => `
-        <tr>
-            <td>${teacher.name}</td>
-            <td>${teacher.specialty || '—'}</td>
-            <td>${teacher.phone || '—'}</td>
-            <td><span class="badge badge-green">Активен</span></td>
-            <td>
-                <button class="btn-icon" onclick="editTeacher('${teacher.id}')" title="Редактировать">✏️</button>
-                <button class="btn-icon" onclick="deleteTeacher('${teacher.id}')" title="Удалить">🗑️</button>
-            </td>
-        </tr>
-    `).join('');
-}
-
 function openTeacherModal(teacherId = null) {
     const modal = document.getElementById('modal-teacher');
     const title = document.getElementById('teacher-modal-title');
@@ -1202,35 +1229,56 @@ function openTeacherModal(teacherId = null) {
 function saveTeacher() {
     const name = document.getElementById('teacher-name').value.trim();
     if (!name) {
-        showToast('Введите имя преподавателя', 'error');
+        showToast('Введите ФИО', 'error');
         return;
     }
     
     const teacherData = {
         id: currentEditingId || uid(),
-        name: name,
-        specialty: document.getElementById('teacher-specialty').value.trim(),
-        phone: document.getElementById('teacher-phone').value.trim(),
-        email: document.getElementById('teacher-email').value.trim(),
-        status: 'active',
-        createdAt: currentEditingId ? (state.teachers.find(t => t.id === currentEditingId)?.createdAt || todayISO()) : todayISO()
+        name,
+        specialty: document.getElementById('teacher-specialty').value,
+        phone: document.getElementById('teacher-phone').value,
+        email: document.getElementById('teacher-email').value,
+        status: 'active'
     };
     
-    if (currentEditingId) {
-        const idx = state.teachers.findIndex(t => t.id === currentEditingId);
-        if (idx !== -1) state.teachers[idx] = teacherData;
+    const idx = state.teachers.findIndex(t => t.id === currentEditingId);
+    if (idx >= 0) {
+        state.teachers[idx] = teacherData;
     } else {
         state.teachers.push(teacherData);
     }
     
     saveState();
-    closeModal('modal-teacher');
     renderTeachers();
+    closeModal('modal-teacher');
     showToast(currentEditingId ? 'Преподаватель обновлен' : 'Преподаватель добавлен');
 }
 
+function renderTeachers() {
+    const tbody = document.getElementById('teachers-tbody');
+    
+    if (state.teachers.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 40px;">Нет преподавателей</td></tr>`;
+        return;
+    }
+    
+    tbody.innerHTML = state.teachers.map(teacher => `
+        <tr>
+            <td><strong>${teacher.name}</strong></td>
+            <td>${teacher.specialty || '—'}</td>
+            <td>${teacher.phone || '—'}</td>
+            <td><span class="badge badge-green">${teacher.status || 'active'}</span></td>
+            <td>
+                <button class="btn btn-sm btn-ghost" onclick="openTeacherModal('${teacher.id}')">Изменить</button>
+                <button class="btn btn-sm btn-ghost" onclick="deleteTeacher('${teacher.id}')">Удалить</button>
+            </td>
+        </tr>
+    `).join('');
+}
+
 function deleteTeacher(teacherId) {
-    if (confirm('Удалить преподавателя?')) {
+    if (confirm('Вы уверены?')) {
         state.teachers = state.teachers.filter(t => t.id !== teacherId);
         saveState();
         renderTeachers();
@@ -1238,97 +1286,55 @@ function deleteTeacher(teacherId) {
     }
 }
 
-function editTeacher(teacherId) {
-    openTeacherModal(teacherId);
-}
-
 // ================= ПОСЕЩАЕМОСТЬ =================
 function renderAttendance() {
-    const content = document.getElementById('attendance-content');
-    
-    if (state.lessons.length === 0) {
-        content.innerHTML = '<p style="text-align:center;color:var(--text3);padding:40px;">Нет данных о посещаемости</p>';
-        return;
-    }
-    
-    const stats = state.students.map(student => {
-        const lessons = state.lessons.filter(l => l.studentId === student.id);
-        const attended = lessons.filter(l => l.status === 'done').length;
-        const percent = lessons.length > 0 ? Math.round(attended / lessons.length * 100) : 0;
-        
-        return { name: student.name, attended, total: lessons.length, percent };
-    });
-    
-    content.innerHTML = `
-        <table style="width:100%;margin-top:16px;">
-            <thead>
-                <tr>
-                    <th>Ученик</th>
-                    <th>Посещено</th>
-                    <th>Всего уроков</th>
-                    <th>Процент</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${stats.map(s => `
-                    <tr>
-                        <td>${s.name}</td>
-                        <td>${s.attended}</td>
-                        <td>${s.total}</td>
-                        <td><span class="badge ${s.percent >= 80 ? 'badge-green' : s.percent >= 60 ? 'badge-yellow' : 'badge-red'}">${s.percent}%</span></td>
-                    </tr>
-                `).join('')}
-            </tbody>
-        </table>
-    `;
+    const container = document.getElementById('attendance-content');
+    container.innerHTML = '<p>Раздел в разработке</p>';
 }
 
 // ================= ФИНАНСЫ =================
 function renderFinance() {
-    const allLessons = state.lessons.filter(l => l.status === 'done');
-    const monthlyIncome = allLessons.reduce((sum, l) => {
-        const student = state.students.find(s => s.id === l.studentId);
-        return sum + (student ? student.rate || 0 : 0);
-    }, 0);
-    
-    const avgRate = state.students.length > 0 
-        ? Math.round(state.students.reduce((sum, s) => sum + (s.rate || 0), 0) / state.students.length)
-        : 0;
-    
-    document.getElementById('finance-monthly').textContent = fmtMoney(monthlyIncome);
-    document.getElementById('finance-paid').textContent = fmtMoney(monthlyIncome * 0.9);
-    document.getElementById('finance-debt').textContent = fmtMoney(monthlyIncome * 0.1);
-    document.getElementById('finance-avg').textContent = fmtMoney(avgRate);
-    
     const tbody = document.getElementById('finance-tbody');
-    if (allLessons.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:40px;color:var(--text3);">Нет данных о платежах</td></tr>';
+    
+    if (state.payments.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 40px;">Нет платежей</td></tr>`;
         return;
     }
     
-    tbody.innerHTML = allLessons.slice(-10).reverse().map(lesson => {
-        const student = state.students.find(s => s.id === lesson.studentId);
-        return `
-            <tr>
-                <td>${student ? student.name : 'Неизвестный ученик'}</td>
-                <td>${fmtMoney(student ? student.rate : 0)}</td>
-                <td>${fmtDate(lesson.date)}</td>
-                <td><span class="badge badge-green">Оплачено</span></td>
-            </tr>
-        `;
-    }).join('');
+    tbody.innerHTML = state.payments.map(payment => `
+        <tr>
+            <td>${state.students.find(s => s.id === payment.studentId)?.name || '—'}</td>
+            <td>${fmtMoney(payment.amount)}</td>
+            <td>${fmtDate(payment.date)}</td>
+            <td><span class="badge badge-green">${payment.status}</span></td>
+        </tr>
+    `).join('');
+    
+    updateFinanceStats();
+}
+
+function updateFinanceStats() {
+    const monthly = state.payments.reduce((sum, p) => sum + (p.amount || 0), 0);
+    const paid = state.payments.filter(p => p.status === 'paid').reduce((sum, p) => sum + (p.amount || 0), 0);
+    const debt = monthly - paid;
+    const avg = state.payments.length > 0 ? monthly / state.payments.length : 0;
+    
+    document.getElementById('finance-monthly').textContent = fmtMoney(monthly);
+    document.getElementById('finance-paid').textContent = fmtMoney(paid);
+    document.getElementById('finance-debt').textContent = fmtMoney(debt);
+    document.getElementById('finance-avg').textContent = fmtMoney(avg);
 }
 
 // ================= ИНИЦИАЛИЗАЦИЯ =================
-document.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', () => {
     loadState();
-    
-    // Обновляем текущую дату в боковой панели
     const today = new Date();
-    const monthNames = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
-    document.getElementById('current-date').textContent = `${today.getDate()} ${monthNames[today.getMonth()]}`;
-    
-    // Инициализируем первую страницу
+    document.getElementById('current-date').textContent = today.toLocaleDateString('ru-RU', { 
+        weekday: 'short',
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric'
+    });
     renderSchedule();
 });
 </script>
