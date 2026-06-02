@@ -46,7 +46,7 @@
             background: var(--bg);
             color: var(--text);
             line-height: 1.5;
-            overflow: hidden; /* Чтобы скроллился только контент */
+            overflow: hidden;
         }
 
         #app { display: flex; height: 100vh; }
@@ -143,7 +143,15 @@
         }
         .btn-ghost { background: var(--bg3); color: var(--text2); }
         .btn-ghost:hover { background: var(--border); color: var(--text); }
+        .btn-sm { padding: 8px 14px; font-size: 13px; }
         .btn svg { width: 16px; height: 16px; }
+
+        .btn-icon {
+            background: none; border: none; padding: 4px 8px;
+            cursor: pointer; font-size: 16px;
+            transition: all 0.15s ease;
+        }
+        .btn-icon:hover { background: var(--bg3); border-radius: 4px; }
 
         .page-content { flex: 1; overflow-y: auto; padding: 24px 32px; }
         .page { display: none; }
@@ -161,6 +169,7 @@
         .card-title { font-size: 16px; font-weight: 700; }
         .card-body { padding: 20px 24px; }
 
+        .table-wrap { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; }
         thead th {
             padding: 12px 16px; text-align: left;
@@ -248,20 +257,17 @@
         .schedule-nav { display: flex; align-items: center; gap: 8px; }
         .schedule-date { font-size: 20px; font-weight: 800; min-width: 200px; text-align: center; }
         .schedule-grid {
-            display: grid; grid-template-columns: 80px repeat(7, 1fr); gap: 1px;
+            display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px;
             background: var(--border); border-radius: var(--radius); overflow: hidden;
         }
-        .schedule-cell { background: var(--bg2); padding: 8px; min-height: 80px; position: relative; }
-        .schedule-time {
-            background: var(--bg3); font-size: 12px; font-weight: 600;
-            color: var(--text3); display: flex; align-items: flex-start; justify-content: center; padding-top: 12px;
-        }
+        .schedule-day { background: var(--bg2); min-height: 200px; position: relative; }
         .schedule-day-header {
             background: var(--bg3); text-align: center; padding: 12px 8px;
-            font-weight: 700; font-size: 13px;
+            font-weight: 700; font-size: 13px; border-bottom: 1px solid var(--border);
         }
         .schedule-day-header .day-num { font-size: 20px; font-weight: 800; display: block; margin-top: 2px; }
         .schedule-day-header.today { background: var(--primary); color: white; }
+        .schedule-day-content { padding: 8px; }
         
         .schedule-event {
             background: var(--primary-light); border-left: 3px solid var(--primary);
@@ -275,12 +281,82 @@
         .schedule-event.done { background: var(--green-light); border-color: var(--green); }
         .schedule-event.done .event-time { color: var(--green); }
 
+        .empty-slot {
+            padding: 20px 8px; text-align: center; color: var(--text3);
+            cursor: pointer; font-size: 13px; transition: all 0.15s ease;
+        }
+        .empty-slot:hover { background: var(--bg3); border-radius: 4px; }
+
+        /* === СТУДЕНТЫ - КАРТОЧКИ === */
+        .students-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 16px;
+        }
+        .student-card {
+            background: var(--bg2); border: 1px solid var(--border);
+            border-radius: var(--radius); box-shadow: var(--shadow);
+            cursor: pointer; transition: all 0.15s ease;
+            overflow: hidden;
+        }
+        .student-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+        .student-card-header {
+            padding: 16px; border-bottom: 1px solid var(--border);
+            display: flex; align-items: flex-start; justify-content: space-between;
+        }
+        .student-avatar {
+            width: 40px; height: 40px; background: var(--primary);
+            color: white; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; flex-shrink: 0;
+        }
+        .student-name { font-size: 14px; font-weight: 700; }
+        .student-subject { font-size: 12px; color: var(--text3); margin-top: 2px; }
+        .student-card-body { padding: 12px 16px; }
+        .student-info-row { font-size: 13px; color: var(--text2); margin-bottom: 6px; }
+        .student-footer {
+            padding: 12px 16px; border-top: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .student-rate { font-weight: 700; color: var(--primary); }
+        .student-actions { display: flex; gap: 4px; }
+
+        /* === EMPTY STATE === */
+        .empty-state {
+            text-align: center; padding: 60px 20px;
+            color: var(--text3);
+        }
+        .empty-state svg {
+            width: 80px; height: 80px; margin-bottom: 20px;
+            opacity: 0.3;
+        }
+        .empty-state h3 { font-size: 18px; margin-bottom: 10px; color: var(--text2); }
+
+        /* === NOTIFICATIONS === */
+        #toast-container {
+            position: fixed; bottom: 20px; right: 20px;
+            z-index: 2000; display: flex; flex-direction: column; gap: 10px;
+        }
+        .toast {
+            padding: 12px 20px; border-radius: 8px;
+            color: white; font-weight: 600; font-size: 14px;
+            box-shadow: var(--shadow-md);
+            animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(400px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
         /* Адаптив для мобильных */
         @media(max-width: 1024px) {
             .sidebar { width: 72px; }
             .sidebar-title, .sidebar-subtitle, .nav-item span, .sidebar-user-info { display: none; }
             .nav-item { justify-content: center; padding: 12px; }
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .students-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -354,7 +430,7 @@
         <div class="topbar">
             <div class="topbar-title" id="page-title">Расписание</div>
             <div class="topbar-actions">
-                <button class="btn btn-primary" id="btn-add" onclick="openAddModal()">
+                <button class="btn btn-primary" id="btn-add" onclick="handleAddButton()">
                     <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
                     </svg>
@@ -407,36 +483,95 @@
 
             <!-- PAGE: STUDENTS -->
             <div class="page" id="page-students">
+                <div class="students-grid" id="students-grid">
+                    <!-- Генерируется через JS -->
+                </div>
+            </div>
+            
+            <!-- PAGE: TEACHERS -->
+            <div class="page" id="page-teachers">
                 <div class="card">
                     <div class="card-header">
-                        <div class="card-title">Список учеников</div>
+                        <div class="card-title">Список преподавателей</div>
                     </div>
                     <div class="table-wrap">
                         <table>
                             <thead>
                                 <tr>
                                     <th>ФИО</th>
-                                    <th>Предмет</th>
+                                    <th>Специальность</th>
                                     <th>Телефон</th>
-                                    <th>Ставка</th>
+                                    <th>Статус</th>
                                     <th>Действия</th>
                                 </tr>
                             </thead>
-                            <tbody id="students-tbody">
+                            <tbody id="teachers-tbody">
                                 <!-- Генерируется через JS -->
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
-            
-            <!-- PLACEHOLDERS FOR OTHER PAGES -->
-            <div class="page" id="page-teachers"><div class="card"><div class="card-body">Раздел в разработке</div></div></div>
-            <div class="page" id="page-attendance"><div class="card"><div class="card-body">Раздел в разработке</div></div></div>
-            <div class="page" id="page-finance"><div class="card"><div class="card-body">Раздел в разработке</div></div></div>
+
+            <!-- PAGE: ATTENDANCE -->
+            <div class="page" id="page-attendance">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Посещаемость</div>
+                    </div>
+                    <div class="card-body" id="attendance-content">
+                        <!-- Генерируется через JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- PAGE: FINANCE -->
+            <div class="page" id="page-finance">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Доход за месяц</div>
+                        <div class="stat-value" id="finance-monthly">0 ₽</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Оплачено</div>
+                        <div class="stat-value" id="finance-paid">0 ₽</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Задолженность</div>
+                        <div class="stat-value" id="finance-debt">0 ₽</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Средняя ставка</div>
+                        <div class="stat-value" id="finance-avg">0 ₽</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">История платежей</div>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Ученик</th>
+                                    <th>Сумма</th>
+                                    <th>Дата</th>
+                                    <th>Статус</th>
+                                </tr>
+                            </thead>
+                            <tbody id="finance-tbody">
+                                <!-- Генерируется через JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 </div>
+
+<!-- TOAST CONTAINER -->
+<div id="toast-container"></div>
 
 <!-- MODAL: ADD LESSON -->
 <div class="modal-overlay" id="modal-lesson">
@@ -474,6 +609,10 @@
                 <label class="form-label">Ссылка Telemost</label>
                 <input type="url" class="form-control" id="lesson-telemost" placeholder="https://telemost.ru/...">
             </div>
+            <div class="form-group">
+                <label class="form-label">Заметки</label>
+                <textarea class="form-control" id="lesson-notes" placeholder="Дополнительная информация" style="resize: vertical; min-height: 80px;"></textarea>
+            </div>
         </div>
         <div class="modal-footer">
             <button class="btn btn-ghost" onclick="closeModal('modal-lesson')">Отмена</button>
@@ -486,7 +625,7 @@
 <div class="modal-overlay" id="modal-student">
     <div class="modal">
         <div class="modal-header">
-            <span class="modal-title">Новый ученик</span>
+            <span class="modal-title" id="student-modal-title">Новый ученик</span>
             <button class="modal-close" onclick="closeModal('modal-student')">✕</button>
         </div>
         <div class="modal-body">
@@ -510,6 +649,14 @@
                     <input type="number" class="form-control" id="student-rate" placeholder="1000">
                 </div>
             </div>
+            <div class="form-group">
+                <label class="form-label">Группа</label>
+                <input type="text" class="form-control" id="student-group" placeholder="Группа 1">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Заметки</label>
+                <textarea class="form-control" id="student-notes" placeholder="Дополнительная информация" style="resize: vertical; min-height: 80px;"></textarea>
+            </div>
         </div>
         <div class="modal-footer">
             <button class="btn btn-ghost" onclick="closeModal('modal-student')">Отмена</button>
@@ -518,26 +665,38 @@
     </div>
 </div>
 
-<script>
-    // Базовая логика переключения страниц
-    document.querySelectorAll('.nav-item').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            btn.classList.add('active');
-            document.getElementById('page-' + btn.dataset.page).classList.add('active');
-            document.getElementById('page-title').textContent = btn.querySelector('span').textContent;
-        });
-    });
+<!-- MODAL: ADD TEACHER -->
+<div class="modal-overlay" id="modal-teacher">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="modal-title" id="teacher-modal-title">Новый преподаватель</span>
+            <button class="modal-close" onclick="closeModal('modal-teacher')">✕</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label class="form-label">ФИО</label>
+                <input type="text" class="form-control" id="teacher-name" placeholder="Петров Петр">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Специальность</label>
+                <input type="text" class="form-control" id="teacher-specialty" placeholder="Английский язык">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Телефон</label>
+                <input type="tel" class="form-control" id="teacher-phone" placeholder="+7 900 ...">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" id="teacher-email" placeholder="teacher@example.com">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-ghost" onclick="closeModal('modal-teacher')">Отмена</button>
+            <button class="btn btn-primary" onclick="saveTeacher()">Сохранить</button>
+        </div>
+    </div>
+</div>
 
-    function openModal(id) { document.getElementById(id).classList.add('open'); }
-    function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-    
-    // Заглушки для кнопок
-    function openAddModal() { 
-        alert("Здесь будет логика добавления (Урок или Ученик)"); 
-    }
-</script>
 <script>
 // ================= СОСТОЯНИЕ И ХРАНИЛИЩЕ =================
 const STORAGE_KEY = 'mudro_crm_v1';
@@ -554,6 +713,8 @@ let state = {
         currentView: 'schedule'
     }
 };
+
+let currentEditingId = null;
 
 // Загрузка данных
 function loadState() {
@@ -607,19 +768,36 @@ function showToast(msg, type = 'success') {
     setTimeout(() => toast.remove(), 3000);
 }
 
+// ================= МОДАЛЬНЫЕ ОКНА =================
+function openModal(id) {
+    document.getElementById(id).classList.add('open');
+}
+
+function closeModal(id) {
+    document.getElementById(id).classList.remove('open');
+    currentEditingId = null;
+}
+
+// Закрытие по клику на оверлей
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+            overlay.classList.remove('open');
+            currentEditingId = null;
+        }
+    });
+});
+
 // ================= НАВИГАЦИЯ =================
 function switchView(viewId) {
-    // Обновляем активные пункты меню
     document.querySelectorAll('.nav-item').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.page === viewId);
     });
     
-    // Обновляем активные страницы
     document.querySelectorAll('.page').forEach(page => {
         page.classList.toggle('active', page.id === `page-${viewId}`);
     });
     
-    // Обновляем заголовок
     const titles = {
         schedule: 'Расписание',
         students: 'Ученики',
@@ -633,9 +811,21 @@ function switchView(viewId) {
                                                          viewId === 'teachers' ? 'Добавить преподавателя' : 'Добавить';
     
     state.settings.currentView = viewId;
-    
-    // Рендерим содержимое страницы
     renderView(viewId);
+}
+
+function handleAddButton() {
+    const currentView = state.settings.currentView;
+    if (currentView === 'schedule') {
+        currentEditingId = null;
+        openLessonModal(todayISO());
+    } else if (currentView === 'students') {
+        currentEditingId = null;
+        openStudentModal();
+    } else if (currentView === 'teachers') {
+        currentEditingId = null;
+        openTeacherModal();
+    }
 }
 
 function renderView(viewId) {
@@ -647,7 +837,14 @@ function renderView(viewId) {
         case 'attendance': renderAttendance(); break;
     }
 }
-    <script>
+
+// Обработчик кликов по пунктам меню
+document.querySelectorAll('.nav-item').forEach(btn => {
+    btn.addEventListener('click', () => {
+        switchView(btn.dataset.page);
+    });
+});
+
 // ================= РАСПИСАНИЕ =================
 let scheduleDate = new Date();
 
@@ -666,14 +863,12 @@ function renderSchedule() {
     const dayNames = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
     const monthNames = ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'];
     
-    // Обновляем диапазон дат
     const d1 = new Date(ws);
     const d2 = new Date(ws);
     d2.setDate(d2.getDate() + 6);
     document.getElementById('schedule-date').textContent = 
         `${d1.getDate()} ${monthNames[d1.getMonth()]} — ${d2.getDate()} ${monthNames[d2.getMonth()]} ${d2.getFullYear()}`;
     
-    // Генерируем сетку на 7 дней
     let html = '';
     for (let i = 0; i < 7; i++) {
         const currentDay = new Date(ws);
@@ -681,35 +876,35 @@ function renderSchedule() {
         const iso = currentDay.toISOString().split('T')[0];
         const isToday = iso === todayISO();
         
-        // Находим уроки на этот день
         const dayLessons = state.lessons
             .filter(l => l.date === iso)
             .sort((a, b) => (a.timeStart || '').localeCompare(b.timeStart || ''));
         
+        const dayContent = dayLessons.length === 0 ? `
+            <div class="empty-slot" onclick="openLessonModal('${iso}')">
+                + Добавить
+            </div>
+        ` : dayLessons.map(lesson => {
+            const student = state.students.find(s => s.id === lesson.studentId);
+            const statusClass = lesson.status === 'done' ? 'done' : '';
+            return `
+                <div class="schedule-event ${statusClass}" onclick="openLessonModal('${iso}', '${lesson.id}')">
+                    <div class="event-time">${lesson.timeStart || ''} – ${lesson.timeEnd || ''}</div>
+                    <div class="event-name">${student ? student.name : 'Без ученика'}</div>
+                    ${lesson.room ? `<div class="event-room">📍 Каб. ${lesson.room}</div>` : ''}
+                    ${lesson.telemostLink ? `<div class="event-room">🔗 Telemost</div>` : ''}
+                </div>
+            `;
+        }).join('');
+
         html += `
-            <div class="schedule-day ${isToday ? 'today' : ''}" data-date="${iso}">
-                <div class="schedule-day-header">
+            <div class="schedule-day">
+                <div class="schedule-day-header ${isToday ? 'today' : ''}">
                     ${dayNames[i]}
                     <span class="day-num">${currentDay.getDate()}</span>
                 </div>
                 <div class="schedule-day-content">
-                    ${dayLessons.length === 0 ? `
-                        <div class="empty-slot" onclick="openLessonModal('${iso}')">
-                            + Добавить
-                        </div>
-                    ` : ''}
-                    ${dayLessons.map(lesson => {
-                        const student = state.students.find(s => s.id === lesson.studentId);
-                        const statusClass = lesson.status === 'done' ? 'done' : '';
-                        return `
-                            <div class="schedule-event ${statusClass}" onclick="openLessonModal('${iso}', '${lesson.id}')">
-                                <div class="event-time">${lesson.timeStart || ''} – ${lesson.timeEnd || ''}</div>
-                                <div class="event-name">${student ? student.name : 'Без ученика'}</div>
-                                ${lesson.room ? `<div class="event-room">📍 Каб. ${lesson.room}</div>` : ''}
-                                ${lesson.telemostLink ? `<div class="event-room">🔗 Telemost</div>` : ''}
-                            </div>
-                        `;
-                    }).join('')}
+                    ${dayContent}
                 </div>
             </div>
         `;
@@ -724,7 +919,6 @@ function updateStats() {
     const todayLessons = state.lessons.filter(l => l.date === today).length;
     const activeStudents = state.students.filter(s => s.status === 'active').length;
     
-    // Считаем доход за неделю
     const ws = getWeekStart(new Date());
     const we = new Date(ws);
     we.setDate(we.getDate() + 6);
@@ -741,169 +935,28 @@ function updateStats() {
     document.getElementById('stat-income').textContent = fmtMoney(weekIncome);
     document.getElementById('stat-done').textContent = weekLessons.length;
 }
-    <script>
-// ================= УЧЕНИКИ =================
-function renderStudents() {
-    const grid = document.getElementById('students-grid');
-    
-    if (state.students.length === 0) {
-        grid.innerHTML = `
-            <div class="empty-state">
-                <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                    <circle cx="9" cy="7" r="4"/>
-                </svg>
-                <h3>Нет учеников</h3>
-                <p>Добавьте первого ученика</p>
-            </div>
-        `;
-        return;
-    }
-    
-    grid.innerHTML = state.students.map(student => {
-        const lessonsCount = state.lessons.filter(l => l.studentId === student.id && l.status === 'done').length;
-        return `
-            <div class="student-card" onclick="openStudentModal('${student.id}')">
-                <div class="student-card-header">
-                    <div style="display:flex;gap:12px;align-items:flex-start">
-                        <div class="student-avatar">${student.name.charAt(0).toUpperCase()}</div>
-                        <div>
-                            <div class="student-name">${student.name}</div>
-                            <div class="student-subject">${student.subject || '—'}</div>
-                        </div>
-                    </div>
-                    <span class="badge ${student.status === 'active' ? 'badge-green' : 'badge-yellow'}">
-                        ${student.status === 'active' ? 'Активен' : 'Пауза'}
-                    </span>
-                </div>
-                
-                <div class="student-card-body">
-                    ${student.phone ? `<div class="student-info-row"> ${student.phone}</div>` : ''}
-                    ${student.group ? `<div class="student-info-row">👥 ${student.group}</div>` : ''}
-                    <div class="student-info-row"> Проведено: ${lessonsCount} уроков</div>
-                </div>
-                
-                <div class="student-footer">
-                    <div class="student-rate">${fmtMoney(student.rate)}/урок</div>
-                    <div class="student-actions">
-                        <button class="btn-icon" onclick="event.stopPropagation();editStudent('${student.id}')" title="Редактировать">✏️</button>
-                        <button class="btn-icon" onclick="event.stopPropagation();deleteStudent('${student.id}')" title="Удалить">️</button>
-                    </div>
-                </div>
-            </div>
-        `;
-    }).join('');
+
+function changeWeek(direction) {
+    scheduleDate.setDate(scheduleDate.getDate() + (direction * 7));
+    renderSchedule();
 }
 
-function openStudentModal(studentId = null) {
-    const modal = document.getElementById('modal-student');
-    const title = document.getElementById('student-modal-title');
-    
-    if (studentId) {
-        const student = state.students.find(s => s.id === studentId);
-        if (!student) return;
-        
-        title.textContent = 'Редактировать ученика';
-        document.getElementById('student-name').value = student.name || '';
-        document.getElementById('student-subject').value = student.subject || '';
-        document.getElementById('student-type').value = student.type || 'individual';
-        document.getElementById('student-rate').value = student.rate || '';
-        document.getElementById('student-phone').value = student.phone || '';
-        document.getElementById('student-email').value = student.email || '';
-        document.getElementById('student-notes').value = student.notes || '';
-    } else {
-        title.textContent = 'Новый ученик';
-        document.getElementById('student-name').value = '';
-        document.getElementById('student-subject').value = '';
-        document.getElementById('student-type').value = 'individual';
-        document.getElementById('student-rate').value = '';
-        document.getElementById('student-phone').value = '';
-        document.getElementById('student-email').value = '';
-        document.getElementById('student-notes').value = '';
-    }
-    
-    modal.classList.add('open');
+function goToday() {
+    scheduleDate = new Date();
+    renderSchedule();
 }
-
-function saveStudent() {
-    const name = document.getElementById('student-name').value.trim();
-    if (!name) {
-        showToast('Введите имя ученика', 'error');
-        return;
-    }
-    
-    const studentId = document.getElementById('student-modal-title').textContent.includes('Редактировать') 
-        ? state.students.find(s => s.name === name)?.id 
-        : null;
-    
-    const studentData = {
-        id: studentId || uid(),
-        name: name,
-        subject: document.getElementById('student-subject').value.trim(),
-        type: document.getElementById('student-type').value,
-        rate: parseFloat(document.getElementById('student-rate').value) || 0,
-        phone: document.getElementById('student-phone').value.trim(),
-        email: document.getElementById('student-email').value.trim(),
-        notes: document.getElementById('student-notes').value.trim(),
-        status: 'active',
-        createdAt: studentId ? (state.students.find(s => s.id === studentId)?.createdAt || todayISO()) : todayISO()
-    };
-    
-    if (studentId) {
-        const idx = state.students.findIndex(s => s.id === studentId);
-        if (idx !== -1) state.students[idx] = studentData;
-    } else {
-        state.students.push(studentData);
-    }
-    
-    saveState();
-    closeModal('modal-student');
-    renderStudents();
-    showToast(studentId ? 'Ученик обновлен' : 'Ученик добавлен');
-}
-
-function deleteStudent(studentId) {
-    if (confirm('Удалить ученика? Все связанные уроки останутся.')) {
-        state.students = state.students.filter(s => s.id !== studentId);
-        saveState();
-        renderStudents();
-        showToast('Ученик удален');
-    }
-}
-
-function editStudent(studentId) {
-    openStudentModal(studentId);
-}
-    <script>
-// ================= МОДАЛЬНЫЕ ОКНА =================
-function openModal(id) {
-    document.getElementById(id).classList.add('open');
-}
-
-function closeModal(id) {
-    document.getElementById(id).classList.remove('open');
-}
-
-// Закрытие по клику на оверлей
-document.querySelectorAll('.modal-overlay').forEach(overlay => {
-    overlay.addEventListener('click', (e) => {
-        if (e.target === overlay) {
-            overlay.classList.remove('open');
-        }
-    });
-});
 
 // ================= УРОКИ =================
 function openLessonModal(date = todayISO(), lessonId = null) {
     const modal = document.getElementById('modal-lesson');
-    const title = document.getElementById('lesson-modal-title');
+    const title = document.querySelector('#modal-lesson .modal-title');
     
-    // Заполняем список учеников
     const select = document.getElementById('lesson-student');
     select.innerHTML = '<option value="">Выберите ученика</option>' + 
         state.students.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
     
     if (lessonId) {
+        currentEditingId = lessonId;
         const lesson = state.lessons.find(l => l.id === lessonId);
         if (!lesson) return;
         
@@ -916,6 +969,7 @@ function openLessonModal(date = todayISO(), lessonId = null) {
         document.getElementById('lesson-telemost').value = lesson.telemostLink || '';
         document.getElementById('lesson-notes').value = lesson.notes || '';
     } else {
+        currentEditingId = null;
         title.textContent = 'Новый урок';
         document.getElementById('lesson-student').value = '';
         document.getElementById('lesson-date').value = date;
@@ -942,12 +996,8 @@ function saveLesson() {
         return;
     }
     
-    const lessonId = document.getElementById('lesson-modal-title').textContent.includes('Редактировать')
-        ? state.lessons.find(l => l.date === date && l.timeStart === document.getElementById('lesson-start').value)?.id
-        : null;
-    
     const lessonData = {
-        id: lessonId || uid(),
+        id: currentEditingId || uid(),
         studentId: studentId,
         date: date,
         timeStart: document.getElementById('lesson-start').value,
@@ -956,11 +1006,11 @@ function saveLesson() {
         telemostLink: document.getElementById('lesson-telemost').value.trim(),
         notes: document.getElementById('lesson-notes').value.trim(),
         status: 'planned',
-        createdAt: lessonId ? (state.lessons.find(l => l.id === lessonId)?.createdAt || todayISO()) : todayISO()
+        createdAt: currentEditingId ? (state.lessons.find(l => l.id === currentEditingId)?.createdAt || todayISO()) : todayISO()
     };
     
-    if (lessonId) {
-        const idx = state.lessons.findIndex(l => l.id === lessonId);
+    if (currentEditingId) {
+        const idx = state.lessons.findIndex(l => l.id === currentEditingId);
         if (idx !== -1) state.lessons[idx] = lessonData;
     } else {
         state.lessons.push(lessonData);
@@ -969,209 +1019,319 @@ function saveLesson() {
     saveState();
     closeModal('modal-lesson');
     renderSchedule();
-    showToast(lessonId ? 'Урок обновлен' : 'Урок добавлен');
+    showToast(currentEditingId ? 'Урок обновлен' : 'Урок добавлен');
 }
 
-// Навигация по неделям
-function changeWeek(direction) {
-    scheduleDate.setDate(scheduleDate.getDate() + (direction * 7));
-    renderSchedule();
+// ================= УЧЕНИКИ =================
+function renderStudents() {
+    const grid = document.getElementById('students-grid');
+    
+    if (state.students.length === 0) {
+        grid.innerHTML = `
+            <div class="empty-state">
+                <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                </svg>
+                <h3>Нет учеников</h3>
+                <p>Добавьте первого ученика</p>
+            </div>
+        `;
+        return;
+    }
+    
+    grid.innerHTML = state.students.map(student => {
+        const lessonsCount = state.lessons.filter(l => l.studentId === student.id && l.status === 'done').length;
+        return `
+            <div class="student-card">
+                <div class="student-card-header">
+                    <div style="display:flex;gap:12px;align-items:flex-start;flex:1;">
+                        <div class="student-avatar">${student.name.charAt(0).toUpperCase()}</div>
+                        <div style="flex:1;">
+                            <div class="student-name">${student.name}</div>
+                            <div class="student-subject">${student.subject || '—'}</div>
+                        </div>
+                    </div>
+                    <span class="badge ${student.status === 'active' ? 'badge-green' : 'badge-yellow'}">
+                        ${student.status === 'active' ? 'Активен' : 'Пауза'}
+                    </span>
+                </div>
+                
+                <div class="student-card-body">
+                    ${student.phone ? `<div class="student-info-row">📱 ${student.phone}</div>` : ''}
+                    ${student.group ? `<div class="student-info-row">👥 ${student.group}</div>` : ''}
+                    <div class="student-info-row">📚 Проведено: ${lessonsCount} уроков</div>
+                </div>
+                
+                <div class="student-footer">
+                    <div class="student-rate">${fmtMoney(student.rate)}/урок</div>
+                    <div class="student-actions">
+                        <button class="btn-icon" onclick="editStudent('${student.id}')" title="Редактировать">✏️</button>
+                        <button class="btn-icon" onclick="deleteStudent('${student.id}')" title="Удалить">🗑️</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
 }
 
-function goToday() {
-    scheduleDate = new Date();
-    renderSchedule();
+function openStudentModal(studentId = null) {
+    const modal = document.getElementById('modal-student');
+    const title = document.getElementById('student-modal-title');
+    
+    if (studentId) {
+        currentEditingId = studentId;
+        const student = state.students.find(s => s.id === studentId);
+        if (!student) return;
+        
+        title.textContent = 'Редактировать ученика';
+        document.getElementById('student-name').value = student.name || '';
+        document.getElementById('student-subject').value = student.subject || '';
+        document.getElementById('student-rate').value = student.rate || '';
+        document.getElementById('student-phone').value = student.phone || '';
+        document.getElementById('student-group').value = student.group || '';
+        document.getElementById('student-notes').value = student.notes || '';
+    } else {
+        currentEditingId = null;
+        title.textContent = 'Новый ученик';
+        document.getElementById('student-name').value = '';
+        document.getElementById('student-subject').value = '';
+        document.getElementById('student-rate').value = '';
+        document.getElementById('student-phone').value = '';
+        document.getElementById('student-group').value = '';
+        document.getElementById('student-notes').value = '';
+    }
+    
+    modal.classList.add('open');
 }
 
-// Отметить урок как проведенный
-function markLessonDone(lessonId) {
-    const lesson = state.lessons.find(l => l.id === lessonId);
-    if (lesson) {
-        lesson.status = 'done';
+function saveStudent() {
+    const name = document.getElementById('student-name').value.trim();
+    if (!name) {
+        showToast('Введите имя ученика', 'error');
+        return;
+    }
+    
+    const studentData = {
+        id: currentEditingId || uid(),
+        name: name,
+        subject: document.getElementById('student-subject').value.trim(),
+        rate: parseFloat(document.getElementById('student-rate').value) || 0,
+        phone: document.getElementById('student-phone').value.trim(),
+        group: document.getElementById('student-group').value.trim(),
+        notes: document.getElementById('student-notes').value.trim(),
+        status: 'active',
+        createdAt: currentEditingId ? (state.students.find(s => s.id === currentEditingId)?.createdAt || todayISO()) : todayISO()
+    };
+    
+    if (currentEditingId) {
+        const idx = state.students.findIndex(s => s.id === currentEditingId);
+        if (idx !== -1) state.students[idx] = studentData;
+    } else {
+        state.students.push(studentData);
+    }
+    
+    saveState();
+    closeModal('modal-student');
+    renderStudents();
+    showToast(currentEditingId ? 'Ученик обновлен' : 'Ученик добавлен');
+}
+
+function deleteStudent(studentId) {
+    if (confirm('Удалить ученика? Все связанные уроки останутся.')) {
+        state.students = state.students.filter(s => s.id !== studentId);
         saveState();
-        renderSchedule();
-        showToast('Урок отмечен как проведенный');
+        renderStudents();
+        showToast('Ученик удален');
     }
 }
-    <script>
+
+function editStudent(studentId) {
+    openStudentModal(studentId);
+}
+
+// ================= ПРЕПОДАВАТЕЛИ =================
+function renderTeachers() {
+    const tbody = document.getElementById('teachers-tbody');
+    
+    if (state.teachers.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--text3);">Нет преподавателей</td></tr>';
+        return;
+    }
+    
+    tbody.innerHTML = state.teachers.map(teacher => `
+        <tr>
+            <td>${teacher.name}</td>
+            <td>${teacher.specialty || '—'}</td>
+            <td>${teacher.phone || '—'}</td>
+            <td><span class="badge badge-green">Активен</span></td>
+            <td>
+                <button class="btn-icon" onclick="editTeacher('${teacher.id}')" title="Редактировать">✏️</button>
+                <button class="btn-icon" onclick="deleteTeacher('${teacher.id}')" title="Удалить">🗑️</button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function openTeacherModal(teacherId = null) {
+    const modal = document.getElementById('modal-teacher');
+    const title = document.getElementById('teacher-modal-title');
+    
+    if (teacherId) {
+        currentEditingId = teacherId;
+        const teacher = state.teachers.find(t => t.id === teacherId);
+        if (!teacher) return;
+        
+        title.textContent = 'Редактировать преподавателя';
+        document.getElementById('teacher-name').value = teacher.name || '';
+        document.getElementById('teacher-specialty').value = teacher.specialty || '';
+        document.getElementById('teacher-phone').value = teacher.phone || '';
+        document.getElementById('teacher-email').value = teacher.email || '';
+    } else {
+        currentEditingId = null;
+        title.textContent = 'Новый преподаватель';
+        document.getElementById('teacher-name').value = '';
+        document.getElementById('teacher-specialty').value = '';
+        document.getElementById('teacher-phone').value = '';
+        document.getElementById('teacher-email').value = '';
+    }
+    
+    modal.classList.add('open');
+}
+
+function saveTeacher() {
+    const name = document.getElementById('teacher-name').value.trim();
+    if (!name) {
+        showToast('Введите имя преподавателя', 'error');
+        return;
+    }
+    
+    const teacherData = {
+        id: currentEditingId || uid(),
+        name: name,
+        specialty: document.getElementById('teacher-specialty').value.trim(),
+        phone: document.getElementById('teacher-phone').value.trim(),
+        email: document.getElementById('teacher-email').value.trim(),
+        status: 'active',
+        createdAt: currentEditingId ? (state.teachers.find(t => t.id === currentEditingId)?.createdAt || todayISO()) : todayISO()
+    };
+    
+    if (currentEditingId) {
+        const idx = state.teachers.findIndex(t => t.id === currentEditingId);
+        if (idx !== -1) state.teachers[idx] = teacherData;
+    } else {
+        state.teachers.push(teacherData);
+    }
+    
+    saveState();
+    closeModal('modal-teacher');
+    renderTeachers();
+    showToast(currentEditingId ? 'Преподаватель обновлен' : 'Преподаватель добавлен');
+}
+
+function deleteTeacher(teacherId) {
+    if (confirm('Удалить преподавателя?')) {
+        state.teachers = state.teachers.filter(t => t.id !== teacherId);
+        saveState();
+        renderTeachers();
+        showToast('Преподаватель удален');
+    }
+}
+
+function editTeacher(teacherId) {
+    openTeacherModal(teacherId);
+}
+
+// ================= ПОСЕЩАЕМОСТЬ =================
+function renderAttendance() {
+    const content = document.getElementById('attendance-content');
+    
+    if (state.lessons.length === 0) {
+        content.innerHTML = '<p style="text-align:center;color:var(--text3);padding:40px;">Нет данных о посещаемости</p>';
+        return;
+    }
+    
+    const stats = state.students.map(student => {
+        const lessons = state.lessons.filter(l => l.studentId === student.id);
+        const attended = lessons.filter(l => l.status === 'done').length;
+        const percent = lessons.length > 0 ? Math.round(attended / lessons.length * 100) : 0;
+        
+        return { name: student.name, attended, total: lessons.length, percent };
+    });
+    
+    content.innerHTML = `
+        <table style="width:100%;margin-top:16px;">
+            <thead>
+                <tr>
+                    <th>Ученик</th>
+                    <th>Посещено</th>
+                    <th>Всего уроков</th>
+                    <th>Процент</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${stats.map(s => `
+                    <tr>
+                        <td>${s.name}</td>
+                        <td>${s.attended}</td>
+                        <td>${s.total}</td>
+                        <td><span class="badge ${s.percent >= 80 ? 'badge-green' : s.percent >= 60 ? 'badge-yellow' : 'badge-red'}">${s.percent}%</span></td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    `;
+}
+
+// ================= ФИНАНСЫ =================
+function renderFinance() {
+    const allLessons = state.lessons.filter(l => l.status === 'done');
+    const monthlyIncome = allLessons.reduce((sum, l) => {
+        const student = state.students.find(s => s.id === l.studentId);
+        return sum + (student ? student.rate || 0 : 0);
+    }, 0);
+    
+    const avgRate = state.students.length > 0 
+        ? Math.round(state.students.reduce((sum, s) => sum + (s.rate || 0), 0) / state.students.length)
+        : 0;
+    
+    document.getElementById('finance-monthly').textContent = fmtMoney(monthlyIncome);
+    document.getElementById('finance-paid').textContent = fmtMoney(monthlyIncome * 0.9);
+    document.getElementById('finance-debt').textContent = fmtMoney(monthlyIncome * 0.1);
+    document.getElementById('finance-avg').textContent = fmtMoney(avgRate);
+    
+    const tbody = document.getElementById('finance-tbody');
+    if (allLessons.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:40px;color:var(--text3);">Нет данных о платежах</td></tr>';
+        return;
+    }
+    
+    tbody.innerHTML = allLessons.slice(-10).reverse().map(lesson => {
+        const student = state.students.find(s => s.id === lesson.studentId);
+        return `
+            <tr>
+                <td>${student ? student.name : 'Неизвестный ученик'}</td>
+                <td>${fmtMoney(student ? student.rate : 0)}</td>
+                <td>${fmtDate(lesson.date)}</td>
+                <td><span class="badge badge-green">Оплачено</span></td>
+            </tr>
+        `;
+    }).join('');
+}
+
 // ================= ИНИЦИАЛИЗАЦИЯ =================
 document.addEventListener('DOMContentLoaded', () => {
     loadState();
     
-    // Устанавливаем текущую дату в сайдбаре
-    const now = new Date();
-    const months = ['Января', 'Февраля', 'Марта', 'Апреля', 'Мая', 'Июня', 'Июля', 'Августа', 'Сентября', 'Октября', 'Ноября', 'Декабря'];
-    document.getElementById('current-date').textContent = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+    // Обновляем текущую дату в боковой панели
+    const today = new Date();
+    const monthNames = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+    document.getElementById('current-date').textContent = `${today.getDate()} ${monthNames[today.getMonth()]}`;
     
-    // Навигация
-    document.querySelectorAll('.nav-item').forEach(btn => {
-        btn.addEventListener('click', () => {
-            switchView(btn.dataset.page);
-        });
-    });
-    
-    // Кнопки добавления
-    document.getElementById('btn-add').addEventListener('click', () => {
-        const currentView = state.settings.currentView;
-        if (currentView === 'schedule') openLessonModal();
-        else if (currentView === 'students') openStudentModal();
-        else if (currentView === 'teachers') openTeacherModal();
-    });
-    
-    // Сохранение ученика
-    document.getElementById('btn-save-student').addEventListener('click', saveStudent);
-    
-    // Сохранение урока
-    document.getElementById('btn-save-lesson').addEventListener('click', saveLesson);
-    
-    // Закрытие модалок
-    document.querySelectorAll('[data-close]').forEach(btn => {
-        btn.addEventListener('click', () => {
-            closeModal(btn.dataset.close);
-        });
-    });
-    
-    // Навигация расписания
-    document.getElementById('sch-prev').addEventListener('click', () => changeWeek(-1));
-    document.getElementById('sch-next').addEventListener('click', () => changeWeek(1));
-    document.getElementById('sch-today').addEventListener('click', goToday);
-    
-    // Первый рендер
-    switchView('schedule');
-});
-
-// Заглушки для будущих функций
-function renderTeachers() {
-    const tbody = document.getElementById('teachers-tbody');
-    if (state.teachers.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" class="empty-state">Нет преподавателей</td></tr>';
-    } else {
-        tbody.innerHTML = state.teachers.map(t => `
-            <tr>
-                <td>${t.name}</td>
-                <td>${t.subjects || '—'}</td>
-                <td>${t.phone || '—'}</td>
-                <td>${t.email || '—'}</td>
-                <td>${t.role || 'Преподаватель'}</td>
-                <td>
-                    <button class="btn btn-ghost btn-xs">✏️</button>
-                    <button class="btn btn-ghost btn-xs">🗑️</button>
-                </td>
-            </tr>
-        `).join('');
-    }
-}
-
-function renderFinance() {
-    const tbody = document.getElementById('payments-tbody');
-    tbody.innerHTML = '<tr><td colspan="5" class="empty-state">Раздел в разработке</td></tr>';
-}
-
-function renderAttendance() {
-    const list = document.getElementById('attendance-list');
-    list.innerHTML = '<div class="empty-state">Раздел в разработке</div>';
-}
-
-function openTeacherModal() {
-    showToast('Функция добавления преподавателей в разработке', 'info');
-}
-// ================= НАСТРОЙКИ API =================
-// В Docker-среде nginx проксирует запросы на /api/ к backend:3000
-const API_URL = ''; // Пустая строка означает относительный путь
-
-// --- ЗАМЕНА ДЛЯ УЧЕНИКОВ ---
-
-// Вместо чтения из localStorage мы читаем с сервера
-async function loadStudentsFromAPI() {
-    try {
-        const response = await fetch(`${API_URL}/api/students`);
-        if (!response.ok) throw new Error('Ошибка сети');
-        const students = await response.json();
-        
-        // Обновляем наш глобальный state и перерисовываем экран
-        state.students = students;
-        renderStudents();
-        console.log("Ученики загружены с сервера:", students);
-    } catch (e) {
-        console.error("Не удалось загрузить учеников:", e);
-        toast("Ошибка подключения к серверу", "error");
-    }
-}
-
-// Вместо сохранения в localStorage мы отправляем POST запрос
-async function saveStudentToAPI(studentData) {
-    try {
-        const response = await fetch(`${API_URL}/api/students`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(studentData)
-        });
-        
-        if (!response.ok) throw new Error('Ошибка сохранения');
-        const newStudent = await response.json();
-        
-        // Обновляем список на экране
-        state.students.push(newStudent);
-        renderStudents();
-        toast("Ученик успешно добавлен в базу");
-        closeModal('#modal-student');
-    } catch (e) {
-        console.error("Ошибка при сохранении:", e);
-        toast("Ошибка сервера", "error");
-    }
-}
-
-// --- ЗАМЕНА ДЛЯ РАСПИСАНИЯ ---
-
-async function loadScheduleFromAPI() {
-    try {
-        const response = await fetch(`${API_URL}/api/schedule`);
-        if (!response.ok) throw new Error('Ошибка сети');
-        const lessons = await response.json();
-        
-        state.lessons = lessons;
-        renderSchedule(); // Перерисовка календаря
-    } catch (e) {
-        console.error("Не удалось загрузить расписание:", e);
-    }
-}
-
-async function saveLessonToAPI(lessonData) {
-    try {
-        const response = await fetch(`${API_URL}/api/schedule`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(lessonData)
-        });
-        
-        if (!response.ok) throw new Error('Ошибка сохранения');
-        const newLesson = await response.json();
-        
-        state.lessons.push(newLesson);
-        renderSchedule();
-        toast("Урок добавлен в расписание");
-        closeModal('#modal-lesson');
-    } catch (e) {
-        console.error("Ошибка:", e);
-        toast("Ошибка сервера", "error");
-    }
-}
-
-// ================= ИНИЦИАЛИЗАЦИЯ ПРИ ЗАГРУЗКЕ =================
-
-// Мы меняем функцию init() из Части 2, чтобы она грузила данные с сервера,
-// а не из localStorage.
-
-document.addEventListener('DOMContentLoaded', () => {
-    // Загружаем данные сразу при старте страницы
-    loadStudentsFromAPI();
-    loadScheduleFromAPI();
-    
-    // ... здесь весь остальной код обработчиков кнопок (click events) из Части 2 ...
-    // ВАЖНО: В обработчиках кнопок (например, "Сохранить ученика") 
-    // вместо вызова saveState() теперь вызываем saveStudentToAPI()
+    // Инициализируем первую страницу
+    renderSchedule();
 });
 </script>
-    
+
 </body>
 </html>
